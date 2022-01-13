@@ -191,7 +191,7 @@ classdef Domain1D < handle
             checklib;
             disp(' ');
             disp('Enabling the energy equation...');
-            calllib(ctm 'stflow_solveEnergyEqn', d.dom_id, 1);
+            calllib(ct, 'stflow_solveEnergyEqn', d.dom_id, 1);
         end
            
         function zz = gridPoints(d, n)
@@ -372,11 +372,13 @@ classdef Domain1D < handle
             checklib;
             sz = size(profile);
             if sz(1) == 2
-                l = length(1, :);
-                calllib(ct, '', d.dom_id, l, profile(1, :), l, profile(2, :));
+                l = length(profile(1, :));
+                calllib(ct, 'stflow_setFixedTempProfile', d.dom_id, ...
+                        l, profile(1, :), l, profile(2, :));
             elseif sz(2) == 2
-                l = length(:, 1);
-                calllib(ct, '', d.dom_id, l, profile(:, 1); l, profile(:, 2));
+                l = length(profile(:, 1));
+                calllib(ct, 'stflow_setFixedTempProfile', d.dom_id, ...
+                        l, profile(:, 1), l, profile(:, 2));
             else error('Wrong temperature profile array shape.');
             end
         end
@@ -411,7 +413,7 @@ classdef Domain1D < handle
             % parameter p:
             %    Pressure to be set. Unit: Pa.
             checklib;
-            calllib(ct, 'bdry_setPressure', d.dom_id, p);
+            calllib(ct, 'stflow_setPressure', d.dom_id, p);
         end
         
         function setProfileD(d, n, p)
@@ -515,7 +517,7 @@ classdef Domain1D < handle
         function set.T(d, t)
             % Set the temperature (K).
             checklib;
-            if temperature <= 0
+            if t <= 0
                 error('The temperature must be positive');
             end
             calllib(ct, 'bdry_setTemperature', d.dom_id, t);
