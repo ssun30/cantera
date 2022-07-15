@@ -1768,7 +1768,7 @@ if env['layout'] == 'compact':
     env['ct_mandir'] = pjoin(env['prefix'], 'man1')
     env['ct_matlab_dir'] = pjoin(env['prefix'], 'MatlabToolbox')   
     env['ct_matlab_legacy_dir'] = pjoin(env['prefix'], 'MatlabToolbox_Legacy')
-    env['ct_matlab_util_dir'] = pjoin(env['prefix', 'MatlabUtil'])
+    env['ct_matlab_util_dir'] = pjoin(env['prefix'], 'MatlabUtil'])
 else:
     env['ct_datadir'] = pjoin(env['prefix'], 'share', 'cantera', 'data')
     env['ct_sampledir'] = pjoin(env['prefix'], 'share', 'cantera', 'samples')
