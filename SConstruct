@@ -137,12 +137,10 @@ if "clean" in COMMAND_LINE_TARGETS:
     for name in Path("site_scons").glob("**/*.pyc"):
         remove_file(name)
     remove_file("interfaces/matlab_legacy/cantera_shared.dll")
-    remove_file("interfaces/Contents.m")
-    remove_file("interfaces/ctpath.m")
-    remove_file("interfaces/ctpath_new.m")
-    remove_file("interfaces/ctpath_legacy.m")
-    remove_file("interfaces/cantera_root.m")
-    for name in Path("interfaces/matlab_legacy/toolbox").glob("ctmethods.*"):
+    remove_file("interfaces/MatlabUtil/Contents.m")
+    remove_file("interfaces/MatlabUtil/ctpath.m")
+    remove_file("interfaces/MatlabUtil/cantera_root.m")
+    for name in Path("interfaces/matlab_legacy").glob("ctmethods.*"):
         remove_file(name)
 
     logger.status("Done removing output files.", print_level=False)
@@ -1766,9 +1764,9 @@ if env['layout'] == 'compact':
     env['ct_sampledir'] = pjoin(env['prefix'], 'samples')
     env["ct_docdir"] = pjoin(env["prefix"], "doc")
     env['ct_mandir'] = pjoin(env['prefix'], 'man1')
-    env['ct_matlab_dir'] = pjoin(env['prefix'], 'MatlabToolbox')   
-    env['ct_matlab_legacy_dir'] = pjoin(env['prefix'], 'MatlabToolbox_Legacy')
-    env['ct_matlab_util_dir'] = pjoin(env['prefix'], 'MatlabUtil')
+    env['ct_matlab_dir'] = pjoin(env['prefix'], 'matlab')
+    env['ct_matlab_new_dir'] = pjoin(env['prefix'], 'matlab', 'MatlabToolbox')       
+    env['ct_matlab_legacy_dir'] = pjoin(env['prefix'], 'matlab', 'MatlabToolbox_Legacy')
 else:
     env['ct_datadir'] = pjoin(env['prefix'], 'share', 'cantera', 'data')
     env['ct_sampledir'] = pjoin(env['prefix'], 'share', 'cantera', 'samples')
@@ -1776,18 +1774,18 @@ else:
     env['ct_mandir'] = pjoin(env['prefix'], 'share', 'man', 'man1')
     if env["layout"] == "conda":
         env["ct_matlab_dir"] = pjoin(
-            env["prefix"], "share", "cantera", "MatlabToolbox")
+            env["prefix"], "share", "cantera", "matlab")
+        env["ct_matlab_new_dir"] = pjoin(
+            env["prefix"], "share", "cantera", "matlab", "MatlabToolbox")
         env["ct_matlab_legacy_dir"] = pjoin(
-            env["prefix"], "share", "cantera", "MatlabToolbox_Legacy")
-        env["ct_matlab_util_dir"] = pjoin(
-            env["prefix"], "share", "cantera", "MatlabUtil")               
+            env["prefix"], "share", "cantera", "matlab", "MatlabToolbox_Legacy")               
     else:
         env["ct_matlab_dir"] = pjoin(
-            env["prefix"], env["libdirname"], "cantera", "MatlabToolbox")
+            env["prefix"], env["libdirname"], "cantera", "matlab")
+        env["ct_matlab_new_dir"] = pjoin(
+            env["prefix"], env["libdirname"], "cantera", "matlab", "MatlabToolbox")        
         env["ct_matlab_legacy_dir"] = pjoin(
-            env["prefix"], env["libdirname"], "cantera", "MatlabToolbox_Legacy")        
-        env["ct_matlab_util_dir"] = pjoin(
-            env["prefix"], env["libdirname"], "cantera", "MatlabUtil")     
+            env["prefix"], env["libdirname"], "cantera", "matlab", "MatlabToolbox_Legacy")     
 
 addInstallActions = ('install' in COMMAND_LINE_TARGETS or
                      'uninstall' in COMMAND_LINE_TARGETS)
@@ -1824,18 +1822,18 @@ if env['layout'] == 'debian':
     env['inst_mandir'] = pjoin(base, 'cantera-common', 'usr', 'share', 'man', 'man1')
 
     env['inst_matlab_dir'] = pjoin(base, 'cantera-matlab', 'usr',
-                                   env['libdirname'], 'cantera', 'MatlabToolbox')
+                                   env['libdirname'], 'cantera', 'matlab')
+    env['inst_matlab_new_dir'] = pjoin(base, 'cantera-matlab', 'usr',
+                                          env['libdirname'], 'cantera', 'matlab', 'MatlabToolbox')
     env['inst_matlab_legacy_dir'] = pjoin(base, 'cantera-matlab', 'usr',
-                                          env['libdirname'], 'cantera', 'MatlabToolbox_Legacy')
-    env['inst_matlab_util_dir'] = pjoin(base, 'cantera-matlab', 'usr',
-                                        env['libdirname'], 'cantera', 'MatlabUtil')                                          
+                                        env['libdirname'], 'cantera', 'matlab', 'MatlabToolbox_Legacy')                                          
 
     env['inst_python_bindir'] = pjoin(base, 'cantera-python', 'usr', 'bin')
     env['python_prefix'] = pjoin(base, 'cantera-python3')
 else:
     env["inst_root"] = instRoot
     locations = ["libdir", "bindir", "python_bindir", "incdir", "incroot",
-        "matlab_dir", "matlab_legacy_dir", "matlab_util_dir", "datadir", "sampledir", "docdir", "mandir"]
+        "matlab_dir", "matlab_new_dir", "matlab_legacy_dir", "datadir", "sampledir", "docdir", "mandir"]
     for loc in locations:
         env[f"inst_{loc}"] = env[f"ct_{loc}"].replace(env["ct_installroot"], instRoot)
 
@@ -2113,7 +2111,7 @@ def postInstallMessage(target, source, env):
             name="Matlab toolbox (legacy)", location=env_dict["ct_matlab_legacy_dir"]
         ))
         install_message.append(locations_message.format(
-            name="Matlab toolbox (new)", location=env_dict["ct_matlab_dir"]
+            name="Matlab toolbox (new)", location=env_dict["ct_matlab_new_dir"]
         ))
         install_message.append(locations_message.format(
             name="Matlab examples (legacy)", location=env_dict["matlab_sample_legacy_loc"]
@@ -2124,7 +2122,7 @@ def postInstallMessage(target, source, env):
         install_message.append(textwrap.dedent("""
             The m-files to set the correct matlab paths for new and legacy Cantera interfaces are at:
 
-              {ct_matlab_util_dir!s}
+              {ct_matlab_dir!s}
         """.format(**env_dict)))
 
     install_message = [
