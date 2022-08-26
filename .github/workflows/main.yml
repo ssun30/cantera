@@ -9,7 +9,11 @@ on:
     branches:
       - main
       - testing
+<<<<<<< HEAD
       - matlab_toolbox_rebase # temporary
+=======
+      - matlab_toolbox_actions # temporary
+>>>>>>> 413e39f0c84b1e66501164e7c293ab3ddd2c5338
   pull_request:
     # Build when a pull request targets main
     branches:
@@ -20,6 +24,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+<<<<<<< HEAD
 
   run-matlab-examples:
     name: Run the MATLAB examples
@@ -371,6 +376,12 @@ jobs:
     name: Sundials ${{ matrix.sundials-ver }}
     runs-on: ubuntu-latest
     timeout-minutes: 60
+=======
+  run-matlab-examples:
+    name: Run the MATLAB examples
+    runs-on: ubuntu-18.04
+    timeout-minutes: 60
+>>>>>>> 413e39f0c84b1e66501164e7c293ab3ddd2c5338
     env:
       PYTHON_VERSION: 3.8
     defaults:
@@ -378,38 +389,35 @@ jobs:
         shell: bash -l {0}
     strategy:
       matrix:
-        sundials-ver: [ 2, 3, 4, 5.8, 6.0 ]
+        matlab-version: ['R2020a', 'R2021a' ]
       fail-fast: false
     steps:
-      - uses: actions/checkout@v2
-        name: Checkout the repository
+      - name: Checkout the repository
+        uses: actions/checkout@v2
         with:
           submodules: recursive
-      - uses: conda-incubator/setup-miniconda@v2
+      - name: Set Up Conda
+        uses: conda-incubator/setup-miniconda@v2
         with:
           auto-update-conda: true
           python-version: ${{ env.PYTHON_VERSION }}
           miniforge-version: latest
-          activate-environment: test
-        name: Set up conda
-      - name: Install conda dependencies
-        # See https://github.com/conda-forge/boost-cpp-feedstock/issues/41 for why we
-        # use boost-cpp rather than boost from conda-forge
+          activate-environment: matlab_test
+      - name: Install Conda dependencies
         run: |
-          conda install -q sundials=${{ matrix.sundials-ver }} scons numpy ruamel.yaml \
-          cython boost-cpp fmt eigen yaml-cpp h5py pandas libgomp openblas pytest
+          conda install -q scons numpy ruamel.yaml cython boost-cpp fmt eigen yaml-cpp h5py pandas libgomp openblas pytest
+      - name: Set up MATLAB
+        uses: matlab-actions/setup-matlab@v1
+        with:
+          release: ${{ matrix.matlab-version }}
       - name: Build Cantera
-        run: |
-          scons build system_fmt=y system_eigen=y system_yamlcpp=y system_sundials=y \
-          blas_lapack_libs='lapack,blas' -j2 logging=debug debug=n \
-          optimize_flags='-O3 -ffast-math -fno-finite-math-only'
-      - name: Test Cantera
-        run: scons test show_long_tests=yes verbose_tests=yes
-      - name: Test Install
+        run: scons build env_vars=all -j2 debug=n matlab_path='/usr/local/MATLAB/${{ matrix.matlab-version }}/' --debug=time
+      - name: Install Cantera
         # spot-check installation locations
         run: |
           scons install
           test -f ${CONDA_PREFIX}/lib/libcantera_shared.so
+<<<<<<< HEAD
           test -f ${CONDA_PREFIX}/include/cantera/base/Solution.h
           test -f ${CONDA_PREFIX}/bin/ck2yaml
           test -f ${CONDA_PREFIX}/share/cantera/data/gri30.yaml
@@ -522,74 +530,16 @@ jobs:
       - name: Restore Boost cache
         uses: actions/cache@v2
         id: cache-boost
+=======
+          test -f ${CONDA_PREFIX}/share/cantera/matlab/MatlabToolbox/ctpath.m
+          test -f ${CONDA_PREFIX}/share/cantera/samples/matlab_new/tut1.m
+      - name: Run MATLAB script
+        uses: matlab-actions/run-command@v1
+>>>>>>> 413e39f0c84b1e66501164e7c293ab3ddd2c5338
         with:
-          path: ${{env.BOOST_ROOT}}
-          key: boost
+          command: addpath('${CONDA_PREFIX}/share/cantera/matlab/MatlabToolbox/'), ctpath, SetMatlabToolboxVersion(1), LoadCantera, Air
 
-      - name: Install Boost Headers
-        if: steps.cache-boost.outputs.cache-hit != 'true'
-        run: |
-          BOOST_ROOT=$(echo $BOOST_ROOT | sed 's/\\/\//g')
-          mkdir -p $BOOST_ROOT
-          curl --progress-bar --location --output $BOOST_ROOT/download.7z $BOOST_URL
-          7z -o$BOOST_ROOT x $BOOST_ROOT/download.7z -y -bd boost_1_78_0/boost
-          mv $BOOST_ROOT/boost_1_78_0/boost $BOOST_ROOT/boost
-          rm $BOOST_ROOT/download.7z
-        shell: bash
-      - name: Build Cantera
-        run: scons build -j2 boost_inc_dir=%BOOST_ROOT% debug=n logging=debug
-          python_package=full env_vars=PYTHONPATH,GITHUB_ACTIONS
-          msvc_version=${{ matrix.vs-toolset }} f90_interface=n --debug=time
-        shell: cmd
-      - name: Test Cantera
-        run: scons test show_long_tests=yes verbose_tests=yes --debug=time
-
-  # Adapted from https://www.scivision.dev/intel-oneapi-github-actions/
-  linux-intel-oneapi:
-    name: intel-oneAPI on Ubuntu, Python 3.8
-    runs-on: ubuntu-latest
-    timeout-minutes: 60
-    env:
-      INTEL_REPO: https://apt.repos.intel.com
-      INTEL_KEY: GPG-PUB-KEY-INTEL-SW-PRODUCTS-2023.PUB
-    steps:
-    - name: Intel Apt repository
-      timeout-minutes: 1
-      run: |
-        wget ${INTEL_REPO}/intel-gpg-keys/${INTEL_KEY}
-        sudo apt-key add ${INTEL_KEY}
-        rm ${INTEL_KEY}
-        echo "deb ${INTEL_REPO}/oneapi all main" | sudo tee /etc/apt/sources.list.d/oneAPI.list
-        sudo apt-get update
-    - name: Install Intel oneAPI
-      timeout-minutes: 5
-      run: |
-        sudo apt-get install intel-oneapi-compiler-fortran intel-oneapi-compiler-dpcpp-cpp-and-cpp-classic \
-        intel-oneapi-mpi intel-oneapi-mpi-devel intel-oneapi-mkl ninja-build libboost-dev
-    - uses: actions/checkout@v2
-      name: Checkout the repository
-      with:
-        submodules: recursive
-    - name: Setup Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.8
-        architecture: x64
-    - name: Upgrade pip
-      run: python3 -m pip install -U pip setuptools wheel
-    - name: Install Python dependencies
-      run: python3 -m pip install ruamel.yaml scons numpy cython h5py pandas pytest
-        pytest-github-actions-annotate-failures
-    - name: Setup Intel oneAPI environment
-      run: |
-        source /opt/intel/oneapi/setvars.sh
-        printenv >> $GITHUB_ENV
-    - name: Build Cantera
-      run: python3 `which scons` build env_vars=all CC=icx CXX=icpx FORTRAN=ifx -j2 debug=n --debug=time
-    - name: Test Cantera
-      run:
-        python3 `which scons` test show_long_tests=yes verbose_tests=yes --debug=time
-
+<<<<<<< HEAD
   linux-intel-oneapi-classic:
     name: intel-oneAPI classic on Ubuntu, Python 3.8
     runs-on: ubuntu-latest
@@ -684,3 +634,6 @@ jobs:
     - name: Test Cantera
       run: scons test show_long_tests=yes verbose_tests=yes --debug=time
 
+=======
+          
+>>>>>>> 413e39f0c84b1e66501164e7c293ab3ddd2c5338
