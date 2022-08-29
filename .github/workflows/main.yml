@@ -62,5 +62,5 @@ jobs:
       - name: Run MATLAB script
         uses: matlab-actions/run-command@v1
         with:
-          command: pwd, cd('${CONDA_PREFIX/share/cantera/matlab'), pwd, ctpath, path, SetMatlabToolboxVersion('new'), path, LoadCantera, Air, Air.TPX
+          command: pwd, cd('${ CONDA_PREFIX }/share/cantera/matlab'), pwd, ctpath, path, SetMatlabToolboxVersion('new'), path, LoadCantera, Air, Air.TPX
 
