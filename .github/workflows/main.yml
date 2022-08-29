@@ -63,5 +63,5 @@ jobs:
         uses: matlab-actions/run-command@v1
         with:
           release: ${{ matrix.matlab-version }}
-          command: pwd, cd('/usr/share/miniconda3/envs/matlab_test/share/cantera/matlab/'), pwd, ctpath, path, SetMatlabToolboxVersion('new'), path, LoadCantera, Air, Air.TPX
+          command: pwd, cd('/usr/share/miniconda3/envs/matlab_test/share/cantera/matlab/'), pwd, addpath(genpath('MatlabToolbox')), path, cantera_root, LoadCantera, Air, Air.TPX
 
