@@ -59,9 +59,6 @@ jobs:
         # spot-check installation locations
         run: |
           scons install
-          test -f ${CONDA_PREFIX}/lib/libcantera_shared.so
-          test -f ${CONDA_PREFIX}/share/cantera/matlab/MatlabToolbox/ctpath.m
-          test -f ${CONDA_PREFIX}/share/cantera/samples/matlab_new/tut1.m
       - name: Run MATLAB script
         uses: matlab-actions/run-command@v1
         with:
