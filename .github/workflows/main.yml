@@ -62,6 +62,5 @@ jobs:
       - name: Run MATLAB script
         uses: matlab-actions/run-command@v1
         with:
-          release: ${{ matrix.matlab-version }}
           command: pwd, cd('/usr/share/miniconda3/envs/matlab_test/share/cantera/matlab/'), pwd, addpath(genpath('MatlabToolbox')), path, cantera_root, LoadCantera, Air, Air.TPX
 
