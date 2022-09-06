@@ -7,7 +7,9 @@ function v = canteraGitCommit()
     %
     checklib;
     buflen = callct('ct_getGitCommit', 0, '');
-    aa = char(zeros(1, buflen));
-    [~, aa] = callct('ct_getGitCommit', buflen, aa);
-    v = aa;
+    aa = char(ones(1, buflen));
+    ptr = libpointer('cstring', aa);
+    [~, bb] = callct('ct_getGitCommit', buflen, ptr);
+    v = bb;
+    clear aa, bb, ptr
 end
