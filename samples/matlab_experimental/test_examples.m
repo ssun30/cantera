@@ -1,4 +1,9 @@
 % runs selected examples without pausing
+
+LoadCantera
+clear all
+close all
+
 equil();
 isentropic();
 reactor1();
@@ -10,3 +15,7 @@ prandtl1();
 flame1;
 catcomb;
 exit;
+
+clear all
+close all
+UnloadCantera
