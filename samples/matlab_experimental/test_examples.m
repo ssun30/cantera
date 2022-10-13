@@ -1,8 +1,8 @@
 % runs selected examples without pausing
 
+LoadCantera
 clear all
 close all
-cleanup
 
 equil();
 isentropic();
@@ -27,3 +27,7 @@ ignite_uv;
 clear all
 close all
 cleanup
+
+clear all
+close all
+UnloadCantera
