@@ -22,9 +22,10 @@ function r = IdealGasConstPressureReactor(contents)
     %     reactor
     % :return:
     %     Instance of class :mat:func:`Reactor`
-    
+
     if nargin == 0
         contents = 0;
     end
+
     r = Reactor(contents, 'IdealGasConstPressureReactor');
 end

@@ -61,7 +61,7 @@ classdef Mixture < handle
         %
         % Note: In keeping with the conventions used by Matlab, the
         % indices start from 1 instead of 0 as in Cantera C++ and
-        % Python interfaces. 
+        % Python interfaces.
         nAtoms
 
         nElements % Number of elements in a mixture.
@@ -83,7 +83,7 @@ classdef Mixture < handle
         %
         % Note: In keeping with the conventions used by Matlab, the
         % indices start from 1 instead of 0 as in Cantera C++ and
-        % Python interfaces. 
+        % Python interfaces.
         elementIndex
         %
         % Number of moles of an element in a mixture.
@@ -143,45 +143,51 @@ classdef Mixture < handle
         %
         phaseMoles
 
-        chemPotentials % Chemical potentials of species in the mixture. Units: J/kmol.         
+        chemPotentials % Chemical potentials of species in the mixture. Units: J/kmol.
     end
-    
+
     methods
         %% Mixture Class Constructor
 
         function m = Mixture(phases)
             checklib;
-            
+
             if nargin > 1
                 error('Mixture: wrong number of arguments');
             end
-            
+
             % Create an empty mixture.
             m.mixID = calllib(ct, 'mix_new');
             m.phases = phases;
-            
+
             % If phases are supplied, add them
-            if nargin == 1
-                if ~isa(phases, 'cell')
-                    error('Enter phases as a cell array.');
-                end
-                
-                % First column contains the phase objects, and the second
-                % column contains the mole numbers of each phase.
-                [np, nc] = size(phases);
-                if nc ~= 2
-                    error('Cell array of phases should have each phase on a new row');
-                end
-                for n = 1:np
-                    m.addPhase(phases{n, 1}, phases{n, 2});
-                end
-                m.T = phases{n, 1}.T;
-                m.P = phases{n, 1}.P;
+            if nargin == 0
+                return
             end
+
+            if ~isa(phases, 'cell')
+                error('Enter phases as a cell array.');
+            end
+
+            % First column contains the phase objects, and the second
+            % column contains the mole numbers of each phase.
+            [np, nc] = size(phases);
+
+            if nc ~= 2
+                error('Cell array of phases should have each phase on a new row');
+            end
+
+            for n = 1:np
+                m.addPhase(phases{n, 1}, phases{n, 2});
+            end
+
+            m.T = phases{n, 1}.T;
+            m.P = phases{n, 1}.P;
+
         end
 
         %% Mixture Class Destructor
-                
+
         function delete(m)
             % Delete the MultiPhase object.
 
@@ -192,18 +198,20 @@ classdef Mixture < handle
 
         function display(m)
             % Display the state of the mixture on the terminal.
-            
+
             calllib(ct, 'mix_updatePhases', m.mixID);
             [np, nc] = size(m.phases);
+
             for n = 1:np
                 s = [sprintf('\n*******************    Phase %d', n) ...
                     sprintf('    ******************************\n\n Moles: %12.6g', ...
-                            phaseMoles(m, n))];
+                    phaseMoles(m, n))];
                 disp(s);
                 display(m.phases{n, 1});
-            end      
+            end
+
         end
-        
+
         function addPhase(m, phase, moles)
             % Add a phase to a mixture.
             %
@@ -217,99 +225,108 @@ classdef Mixture < handle
             % :param moles:
             %     Number of moles of the ``phase`` to be added to this mixture.
             %     Units: kmol
-            %    
+            %
             if ~isa(phase, 'ThermoPhase')
                 error('Phase object of wrong type.');
             end
+
             if ~isa(moles, 'numeric')
                 error('Number of moles must be numeric');
             end
+
             if moles < 0.0
                 error('Negative moles');
             end
-            
-            iok = calllib(ct, 'mix_addPhase', m.mixID, phase.tp_id, ...
-                          moles);
-            if iok < 0
-                error('Error adding phase');
-            end
+
+            calllib(ct, 'mix_addPhase', m.mixID, phase.tp_id, moles);
+
         end
-        
-        %% Mixture Get methods        
-        
+
+        %% Mixture Get methods
+
         function temperature = get.T(m)
             temperature = calllib(ct, 'mix_temperature', m.mixID);
         end
-        
+
         function pressure = get.P(m)
             pressure = calllib(ct, 'mix_pressure', m.mixID);
         end
 
         function n = get.nAtoms(m, e)
-            n = calllib(ct, 'mix_nPhases', m.mixID, k-1, e-1);
+            n = calllib(ct, 'mix_nPhases', m.mixID, k - 1, e - 1);
         end
-        
+
         function n = get.nElements(m)
             n = calllib(ct, 'mix_nElements', m.mixID);
-        end        
-        
+        end
+
         function n = get.nPhases(m)
             n = calllib(ct, 'mix_nPhases', m.mixID);
         end
-        
+
         function n = get.nSpecies(m)
             n = calllib(ct, 'mix_nSpecies', m.mixID);
-        end        
-        
+        end
+
         function n = get.elementIndex(m, name)
             n = calllib(ct, 'mix_elementIndex', m.mixID, name) + 1;
-        end         
-        
-        function n = get.speciesIndex(m, k, p)
-            n = calllib(ct, 'mix_speciesIndex', m.mixID, k-1, p-1) + 1;
         end
-        
+
+        function n = get.speciesIndex(m, k, p)
+            n = calllib(ct, 'mix_speciesIndex', m.mixID, k - 1, p - 1) + 1;
+        end
+
         function moles = get.elementMoles(m, e)
+
             if nargin == 2
                 moles = calllib(ct, 'mix_elementMoles', m.mixID, e)
             elseif nargin == 1
                 nel = m.nElements;
                 moles = zeros(1, nel);
+
                 for i = 1:nel
                     moles(i) = calllib(ct, 'mix_elementMoles', m.mixID, i);
                 end
+
             else error('wrong number of arguments');
             end
+
         end
-        
+
         function moles = get.phaseMoles(m, n)
+
             if nargin == 2
                 moles = calllib(ct, 'mix_phaseMoles', m.mixID, n);
             elseif nargin == 1
                 np = m.nPhases;
                 moles = zeros(1, np);
+
                 for i = 1:np
-                    moles(i) = calllib(ct, 'mix_phaseMoles', ...
-                                       m.mixID, i);
+                    moles(i) = calllib(ct, 'mix_phaseMoles', m.mixID, i);
                 end
+
             else error('wrong number of arguments');
             end
+
         end
-        
-        function moles = speciesMoles(m, k)           
+
+        function moles = speciesMoles(m, k)
+
             if nargin == 2
                 moles = calllib(ct, 'mix_speciesMoles', m.mixID, k);
             elseif nargin == 1
                 nsp = m.nSpecies;
                 moles = zeros(1, nsp);
+
                 for i = 1:nsp
-                    moles(i) = calllib(ct, 'mix_speciesMoles', ...
-                                       m.mixID, i);
+                    moles(i) = calllib(ct, 'mix_speciesMoles', m.mixID, i);
                 end
+
             else error('wrong number of arguments');
             end
-        end        
-        
+
+        end
+
         function mu = get.chemPotentials(m)
             nsp = m.nSpecies;
             xx = zeros(1, nsp);
@@ -317,17 +334,17 @@ classdef Mixture < handle
             calllib(ct, 'mix_getChemPotential', m.mixID, nsp, ptr);
             mu = ptr.Value;
         end
-        
+
         %% Mixture Set methods
 
         function m = set.T(m, temp)
             calllib(ct, 'mix_setTemperature', m.mixID, temp);
         end
-        
+
         function m = set.P(m, pressure)
             calllib(ct, 'mix_setPressure', m.mixID, pressure);
-        end        
-        
+        end
+
         function setPhaseMoles(m, n, moles)
             % Set the number of moles of a phase in a mixture.
             %
@@ -340,9 +357,9 @@ classdef Mixture < handle
             % :param moles:
             %     Number of moles to add. Units: kmol
             %
-            calllib(ct, 'mix_setPhaseMoles', m.mixID, n-1, moles);
+            calllib(ct, 'mix_setPhaseMoles', m.mixID, n - 1, moles);
         end
-        
+
         function setSpeciesMoles(m, moles)
             % Set the moles of the species.
             %
@@ -369,8 +386,9 @@ classdef Mixture < handle
             else
                 error('The input must be a vector or string!');
             end
+
         end
-        
+
         function r = equilibrate(m, XY, err, maxsteps, maxiter, loglevel)
             % Set the mixture to a state of chemical equilibrium.
             %
@@ -420,22 +438,27 @@ classdef Mixture < handle
             if nargin < 6
                 loglevel = 0;
             end
+
             if nargin < 5
                 maxiter = 200;
             end
+
             if nargin < 4
                 maxsteps = 1000;
             end
+
             if nargin < 3
                 err = 1.0e-9;
             end
+
             if nargin < 2
                 XY = 'TP'
             end
+
             r = calllib(ct, 'mix_equilibrate', m.mixID, XY, err, ...
                         maxsteps, maxiter, loglevel);
         end
-        
-    end
-end
 
+    end
+
+end

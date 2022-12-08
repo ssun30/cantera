@@ -31,7 +31,9 @@ function v = Valve(upstream, downstream)
     %
 
     v = FlowDevice('Valve');
+
     if nargin == 2
         v.install(upstream, downstream)
-    end    
+    end
+
 end

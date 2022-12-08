@@ -1,9 +1,9 @@
 function ignite_hp(gas)
-    %  IGNITE_HP  Solves the same ignition problem as 'ignite', but uses  
+    %  IGNITE_HP  Solves the same ignition problem as 'ignite', but uses
     %  function conhp instead of reactor.
     %
     % Keywords: combustion, user-defined model, ignition delay, plotting
-    
+
     clear all
     close all
     clc
@@ -12,13 +12,13 @@ function ignite_hp(gas)
     help ignite_hp
 
     if nargin == 0
-       gas = Solution('gri30.yaml', 'gri30');
+        gas = Solution('gri30.yaml', 'gri30');
     end
 
     mw = gas.molecularWeights;
     gas.TPX = {1001.0, oneatm, 'H2:2,O2:1,N2:4'};
 
-    y0 = [gas.T 
+    y0 = [gas.T
           gas.X'];
     tel = [0, 0.001];
     options = odeset('RelTol', 1.e-5, 'AbsTol', 1.e-12, 'Stats', 'on');
@@ -27,19 +27,19 @@ function ignite_hp(gas)
     disp(['CPU time = ' num2str(cputime - t0)]);
 
     if nargout == 0
-       % plot the temperature and OH mole fractions.
-       figure(1);
-       plot(out.x, out.y(1,:));
-       xlabel('time');
-       ylabel('Temperature');
-       title(['Final T = ' num2str(out.y(1, end)), ' K']);
+        % plot the temperature and OH mole fractions.
+        figure(1);
+        plot(out.x, out.y(1, :));
+        xlabel('time');
+        ylabel('Temperature');
+        title(['Final T = ' num2str(out.y(1, end)), ' K']);
 
-       figure(2);
-       ioh = gas.speciesIndex('OH');
-       plot(out.x, out.y(1+ioh, :));
-       xlabel('time');
-       ylabel('Mass Fraction');
-       title('OH Mass Fraction');
+        figure(2);
+        ioh = gas.speciesIndex('OH');
+        plot(out.x, out.y(1 + ioh, :));
+        xlabel('time');
+        ylabel('Mass Fraction');
+        title('OH Mass Fraction');
     end
 
     toc
