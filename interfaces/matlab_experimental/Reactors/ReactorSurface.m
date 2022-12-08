@@ -12,15 +12,15 @@ classdef ReactorSurface < handle
     %
     % Note: all of the arguments are optional and can be activated
     % after initial construction by using the various methods of
-    % the 'ReactorSurface' class. 
+    % the 'ReactorSurface' class.
     %
     % :param kleft:
     %    Surface reaction mechanisms for the left-facing surface.
     %    This must bean instance of class 'Kinetics', or of a class
-    %    derived from 'Kinetics', such as 'Interface'. 
+    %    derived from 'Kinetics', such as 'Interface'.
     % :param reactor:
     %    Instance of class 'Reactor' to be used as the adjacent
-    %    bulk phase. 
+    %    bulk phase.
     % :param area:
     %    The area of the surface in m^2. Defaults to 1.0 m^2 if not
     %    specified.
@@ -39,38 +39,42 @@ classdef ReactorSurface < handle
     properties (SetAccess = public)
         area % Area of the reactor surface in m^2.
     end
-    
+
     methods
         %% ReactorSurface Class Constructor
 
         function s = ReactorSurface(kleft, reactor, area)
             checklib;
-            
+
             s.surfID = callct('reactorsurface_new', 0);
             s.reactor = -1;
-           
+
             if nargin >= 1
                 s.setKinetics(kleft);
             end
-            
+
             if nargin >= 2
+
                 if isa(reactor, 'Reactor')
                     s.install(reactor);
                 else
                     warning('Reactor was not installed due to incorrect type');
                 end
+
             end
-            
+
             if nargin >= 3
+
                 if isnumeric(area)
                     s.area = area;
                 else
                     warning('Area was not a number and was not set');
                 end
+
             end
 
         end
-        
+
         %% ReactorSurface Class Destructor
 
         function delete(s)
@@ -80,7 +84,7 @@ classdef ReactorSurface < handle
         end
 
         %% ReactorSurface Utility Methods
-        
+
         function install(s, r)
             % Install a ReactorSurface in a Reactor.
             %
@@ -88,37 +92,37 @@ classdef ReactorSurface < handle
             %
             % :param r:
             %    Instance of class 'Reactor'.
-            % 
+            %
 
             s.reactor = r;
             callct('reactorsurface_install', s.surfID, r.id);
         end
-        
+
         function addSensitivityReaction(s, m)
             % Specifies that the sensitivity of the state variables with
             % respect to reaction m should be computed. The surface must be
-            % installed on a reactor and part of a network first. 
+            % installed on a reactor and part of a network first.
             %
             % s.addSensitivityReaction(m)
             %
             % :param m:
             %    Index number of reaction.
-            
+
             callct('reactorsurface_addSensitivityReaction', s.surfID, m);
-        end        
-        
+        end
+
         %% ReactorSurface Get Methods
 
         function a = get.area(s)
             a = callct('reactorsurface_area', s.surfID);
         end
-        
+
         %% ReactorSurface Set Methods
-                
+
         function set.area(s, a)
             callct('reactorsurface_setArea', s.surfID, a);
         end
-        
+
         function setKinetics(s, kin)
             % Setthe surface reaction mechanism on a reactor surface.
             %
@@ -129,14 +133,16 @@ classdef ReactorSurface < handle
             %    from kin) to be used as the kinetic mechanism for this
             %    surface. Typically an instance of class 'Interface'.
             %
-            
+
             ikin = 0;
+
             if isa(kin, 'Kinetics')
                 ikin = kin.kinID;
             end
-            
+
             callct('reactorsurface_setkinetics', s.surfID, ikin);
         end
-    end
-end
 
+    end
+
+end

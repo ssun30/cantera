@@ -15,35 +15,35 @@ clc
 tic % total running time of the script
 help diff_flame
 
-runtime = cputime;  % Record the starting time
+runtime = cputime; % Record the starting time
 
 %% Parameter values of inlet streams
 
-p          =   oneatm;              % Pressure
-tin        =   300.0;               % Inlet temperature
-mdot_o     =   0.72;                % Air mass flux, kg/m^2/s
-mdot_f     =   0.24;                % Fuel mass flux, kg/m^2/s
-transport  =  'Mix';                % Transport model
+p = oneatm; % Pressure
+tin = 300.0; % Inlet temperature
+mdot_o = 0.72; % Air mass flux, kg/m^2/s
+mdot_f = 0.24; % Fuel mass flux, kg/m^2/s
+transport = 'Mix'; % Transport model
 % NOTE: Transport model needed if mechanism file does not have transport
 % properties.
 
 %% Set-up initial grid, loglevel, tolerances. Enable/Disable grid refinement
 
-initial_grid = 0.02*[0.0, 0.2, 0.4, 0.6, 0.8, 1.0];  % Units: m
-tol_ss = {1.0e-5, 1.0e-9};        % {rtol atol} for steady-state problem
-tol_ts = {1.0e-3, 1.0e-9};        % {rtol atol} for time stepping
-loglevel = 1;                     % Amount of diagnostic output (0 to 5)
-refine_grid = 1;                  % 1 to enable refinement, 0 to disable
+initial_grid = 0.02 * [0.0, 0.2, 0.4, 0.6, 0.8, 1.0]; % Units: m
+tol_ss = {1.0e-5, 1.0e-9}; % {rtol atol} for steady-state problem
+tol_ts = {1.0e-3, 1.0e-9}; % {rtol atol} for time stepping
+loglevel = 1; % Amount of diagnostic output (0 to 5)
+refine_grid = 1; % 1 to enable refinement, 0 to disable
 
 %% Create the gas objects for the fuel and oxidizer streams
 %
-% These objects will be used to evaluate all thermodynamic, kinetic, and 
+% These objects will be used to evaluate all thermodynamic, kinetic, and
 % transport properties.
 
 fuel = Solution('gri30.yaml', 'gri30', transport);
 ox = Solution('gri30.yaml', 'gri30', transport);
-oxcomp     =  'O2:0.21, N2:0.78';   % Air composition
-fuelcomp   =  'C2H6:1';             % Fuel composition
+oxcomp = 'O2:0.21, N2:0.78'; % Air composition
+fuelcomp = 'C2H6:1'; % Fuel composition
 % Set each gas mixture state with the corresponding composition.
 fuel.TPX = {tin, p, fuelcomp};
 ox.TPX = {tin, p, oxcomp};
@@ -51,8 +51,8 @@ ox.TPX = {tin, p, oxcomp};
 %% Set-up the flow object
 %
 % For this problem, the AxisymmetricFlow model is needed. Set the state of
-% the flow as the fuel gas object. This is arbitrary and is only used to 
-% initialize the flow object. Set the grid to the initial grid defined 
+% the flow as the fuel gas object. This is arbitrary and is only used to
+% initialize the flow object. Set the grid to the initial grid defined
 % prior, same for the tolerances.
 
 f = AxisymmetricFlow(fuel, 'flow');
@@ -90,17 +90,17 @@ fl = CounterFlowDiffusionFlame(inlet_f, f, inlet_o, fuel, ox, 'O2');
 
 %% Solve with fixed temperature profile
 %
-% Grid refinement is turned off for this process in this example. 
+% Grid refinement is turned off for this process in this example.
 % To turn grid refinement on, change 0 to 1 for last input is solve function.
 
 fl.solve(loglevel, 0);
 
 %% Enable the energy equation.
 %
-% The energy equation will now be solved to compute the temperature profile. 
-% We also tighten the grid refinement criteria to get an accurate final 
-% solution. The explanation of the setRefineCriteria function is located 
-% on cantera.org in the Matlab User's Guide and can be accessed by 
+% The energy equation will now be solved to compute the temperature profile.
+% We also tighten the grid refinement criteria to get an accurate final
+% solution. The explanation of the setRefineCriteria function is located
+% on cantera.org in the Matlab User's Guide and can be accessed by
 % help setRefineCriteria
 
 f.enableEnergy;
@@ -112,26 +112,26 @@ fl.saveSoln('c2h6.xml', 'energy', ['solution with energy equation']);
 
 fl.writeStats;
 elapsed = cputime - runtime;
-e = sprintf('Elapsed CPU time: %10.4g',elapsed);
+e = sprintf('Elapsed CPU time: %10.4g', elapsed);
 disp(e);
 
 % Make a single plot showing temperature and mass fraction of select
 % species along axial distance from fuel inlet to air inlet.
 %
 
-z = fl.grid('flow');                    % Get grid points of flow
-spec = fuel.speciesNames;               % Get species names in gas
-T = fl.solution('flow', 'T');           % Get temperature solution
+z = fl.grid('flow'); % Get grid points of flow
+spec = fuel.speciesNames; % Get species names in gas
+T = fl.solution('flow', 'T'); % Get temperature solution
 
 for i = 1:length(spec)
     % Get mass fraction of all species from solution
     y(i, :) = fl.solution('flow', spec{i});
 end
 
-j = fuel.speciesIndex('O2');            % Get index of O2 in gas object
-k = fuel.speciesIndex('H2O');           % Get index of H2O in gas object
-l = fuel.speciesIndex('C2H6');          % Get index of C2H6 in gas object
-m = fuel.speciesIndex('CO2');           % Get index of CO2 in gas object
+j = fuel.speciesIndex('O2'); % Get index of O2 in gas object
+k = fuel.speciesIndex('H2O'); % Get index of H2O in gas object
+l = fuel.speciesIndex('C2H6'); % Get index of C2H6 in gas object
+m = fuel.speciesIndex('CO2'); % Get index of CO2 in gas object
 
 clf;
 yyaxis left

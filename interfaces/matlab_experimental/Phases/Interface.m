@@ -23,7 +23,7 @@ classdef Interface < handle & ThermoPhase & Kinetics
     %
 
     properties (SetAccess = public)
- 
+
         % Surface coverages of the species on an interface.
         % Unit: kmol/m^2 for surface phases, kmol/m for edge phases.
         siteDensity
@@ -33,7 +33,7 @@ classdef Interface < handle & ThermoPhase & Kinetics
     properties (SetAccess = protected)
         concentrations % Concentrations of the species on an interface.
     end
-    
+
     methods
         %% Interface Class Constructor
 
@@ -43,6 +43,7 @@ classdef Interface < handle & ThermoPhase & Kinetics
 
             t = ThermoPhase(src, id);
             s@ThermoPhase(src, id);
+
             if nargin == 2
                 args = {};
             elseif nargin == 3
@@ -54,12 +55,13 @@ classdef Interface < handle & ThermoPhase & Kinetics
             elseif nargin == 6
                 args = {p1, p2, p3, p4};
             end
+
             s@Kinetics(t, src, id, args{:});
             s.tpID = t.tpID;
         end
-        
+
         %% Interface Get Methods
-                
+
         function c = coverages(s)
             % Surface coverages of the species on an interface.
 
@@ -70,12 +72,12 @@ classdef Interface < handle & ThermoPhase & Kinetics
             callct('surf_getCoverages', surfID, pt);
             c = pt.Value;
         end
-        
+
         function d = get.siteDensity(s)
             surfID = s.tpID;
             d = calllibt(ct, 'surf_siteDensity', surfID);
         end
-        
+
         function c = get.concentrations(s)
             surfID = s.tr_id;
             nsp = s.nSpecies;
@@ -84,7 +86,7 @@ classdef Interface < handle & ThermoPhase & Kinetics
             callct('surf_getConcentrations', surfID, xx);
             c = pt.Value;
         end
-        
+
         function setCoverages(s, cov, norm)
             % Set surface coverages of the species on an interface.
             %
@@ -103,32 +105,35 @@ classdef Interface < handle & ThermoPhase & Kinetics
             %      ``s`` is a vector, not a string. Since unnormalized coverages can lead to
             %      unphysical results, ``'nonorm'`` should be used only in rare cases, such
             %      as computing partial derivatives with respect to a species coverage.
-                        
+
             if nargin == 3 && strcmp(norm, 'nonorm')
                 norm_flag = 0;
             else
                 norm_flag = 1;
             end
-            
+
             surfID = s.tpID;
             nsp = s.nSpecies;
             [m, n] = size(cov);
-                        
+
             if isa(cov, 'double')
                 sz = length(cov);
-                if sz == nsp
-                    if ((m == nsp && n == 1) || (m == 1 & n == nsp))
-                        callct('surf_setCoverages', surfID, cov, norm_flag);
-                    else error('wrong size for coverage array');
-                    end
-                else
+
+                if sz ~= nsp
                     error('wrong size for coverage array');
                 end
+
+                if ((m == nsp && n == 1) || (m == 1 & n == nsp))
+                    callct('surf_setCoverages', surfID, cov, norm_flag);
+                else error('wrong size for coverage array');
+                end
+
             elseif isa(cov, 'char')
                 callct('surf_setCoveragesByName', surfID, cov);
             end
+
         end
-        
+
         function set.siteDensity(s, d)
             % Set the site density of a phase on an interface.
             %
@@ -139,11 +144,11 @@ classdef Interface < handle & ThermoPhase & Kinetics
             % :param d
             %    Double site density. Unit: kmol/m^2 for surface phases,
             %    kmol/m for edge phases.
-        
+
             surfID = s.tpID;
             callct('surf_setSiteDensity', surfID, d);
         end
-        
-    end
-end
 
+    end
+
+end

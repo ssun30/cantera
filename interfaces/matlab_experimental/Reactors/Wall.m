@@ -2,7 +2,7 @@ classdef Wall < handle
     % Wall Class
     %
     % x = Wall()
-    %    
+    %
     % A Wall separates two reactors, or a reactor and a reservoir.
     % A Wall has a finite area, may conduct heat between the two
     % reactors on either side, and may move like a piston.
@@ -18,7 +18,7 @@ classdef Wall < handle
     %
     % where K is a non-negative constant, and v_0 is a specified
     % function of time. The velocity is positive if the wall is
-    % moving to the right. 
+    % moving to the right.
     %
     % The heat flux through the wall is computed from:
     %
@@ -27,20 +27,20 @@ classdef Wall < handle
     % where U is the overall heat transfer coefficient for
     % conduction/convection, and q_0 is a specified function of
     % time. The heat flux is positive when heat flows from the
-    % reactor on the left to the reactor on the right. 
+    % reactor on the left to the reactor on the right.
     %
     % Note: the Wall class constructor only assign default values
     % to various properties. The user could specify those properties
     % after initial construction by using the various methods of
     % the 'Wall' class.
     %
-    
+
     properties (SetAccess = immutable)
         id
         type
     end
 
-    properties (SetAccess = protected)       
+    properties (SetAccess = protected)
         left % Reactor on the left.
         right % Reactor on the right.
     end
@@ -54,13 +54,13 @@ classdef Wall < handle
 
         function x = Wall()
             checklib;
-            
+
             % At the moment, only one wall type is implemented
             typ = 'Wall';
 
             x.type = char(typ);
             x.id = callct('wall_new', x.type);
-            
+
             % Set default values.
             x.left = -1;
             x.right = -1;
@@ -69,7 +69,7 @@ classdef Wall < handle
             x.setHeatTransferCoeff(0.0);
 
         end
-        
+
         %% Wall Class Destructor
 
         function delete(w)
@@ -79,7 +79,7 @@ classdef Wall < handle
         end
 
         %% Wall Class Utility Methods
-        
+
         function install(w, l, r)
             % Install a wall between two reactors.
             %
@@ -87,16 +87,16 @@ classdef Wall < handle
             %
             % :param l:
             %    Instance of class 'Reactor' to be used as the bulk phase
-            %    on the left side of the wall. 
+            %    on the left side of the wall.
             % :param r:
             %    Instance of class 'Reactor' to be used as the bulk phase
-            %    on the right side of the wall.   
-           
+            %    on the right side of the wall.
+
             w.left = l;
             w.right = r;
             callct('wall_install', w.id, l.id, r.id);
         end
-        
+
         function ok = ready(w)
             % Check whether a wall is ready.
             %
@@ -105,30 +105,30 @@ classdef Wall < handle
 
             ok = callct('wall_ready', w.id);
         end
-                
+
         %% ReactorNet get methods
-                
+
         function a = get.area(w)
             a = callct('wall_area', w.id);
         end
-        
+
         function q = qdot(w, t)
-            % Total heat transfer through a wall at a given time t. 
+            % Total heat transfer through a wall at a given time t.
 
             q = callct('wall_Q', w.id, t);
         end
-        
+
         function v = vdot(w, t)
             % Rate of volumetric change at a given time t.
             v = callct('wall_vdot', w.id, t);
-        end  
+        end
 
         %% ReactorNet set methods
 
         function set.area(w, a)
             callct('wall_setArea', w.id, a);
         end
-        
+
         function setThermalResistance(w, r)
             % Set the thermal resistance.
             %
@@ -137,10 +137,10 @@ classdef Wall < handle
             % :param r:
             %    Thermal resistance. Unit: K*m^2/W.
             %
-            
+
             callct('wall_setThermalResistance', w.id, r);
         end
-        
+
         function setHeatTransferCoeff(w, u)
             % Set the thermal transfer coefficient.
             %
@@ -149,10 +149,10 @@ classdef Wall < handle
             % :param u:
             %    Heat transfer coefficient. Unit: W/(m^2-K).
             %
-            
+
             callct('wall_setHeatTransferCoeff', w.id, u);
         end
-        
+
         function setEmissivity(w, epsilon)
             % Set the emissivity.
             %
@@ -161,10 +161,10 @@ classdef Wall < handle
             % :param epsilon:
             %    Nondimensional emissivity.
             %
-            
+
             callct('wall_setEmissivity', w.id, epsilon);
         end
-        
+
         function setExpansionRateCoeff(w, k)
             % Set the expansion rate coefficient.
             %
@@ -173,10 +173,10 @@ classdef Wall < handle
             % :param k:
             %    Expanstion rate coefficient. Unit: m/(s-Pa).
             %
-            
+
             callct('wall_setExpansionRateCoeff', w.id, k);
-        end         
-        
+        end
+
         function setHeatFlux(w, f)
             % Set the heat flux.
             %
@@ -185,7 +185,7 @@ classdef Wall < handle
             % Must be set by an instance of class 'Func', which allows the
             % heat flux to be an arbitrary function of time. It is possible
             % to specify a constant heat flux by using the polynomial
-            % functor with only the first term specified. 
+            % functor with only the first term specified.
             %
             % :param f:
             %    Instance of class 'Func'. Unit: W/m^2.
@@ -193,7 +193,7 @@ classdef Wall < handle
 
             callct('wall_setHeatFlux', w.id, f.id);
         end
-        
+
         function setVelocity(w, f)
             % Set the velocity of the wall.
             %
@@ -202,15 +202,15 @@ classdef Wall < handle
             % Must be set by an instance of class 'Func', which allows the
             % velocity to be an arbitrary function of time. It is possible
             % to specify a constant velocity by using the polynomial
-            % functor with only the first term specified. 
+            % functor with only the first term specified.
             %
             % :param f:
             %    Instance of class 'Func'. Unit: m/s.
             %
 
             callct('wall_setVelocity', w.id, f.id);
-        end         
-      
-    end
-end
+        end
 
+    end
+
+end

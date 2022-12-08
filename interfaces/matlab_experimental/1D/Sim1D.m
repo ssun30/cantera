@@ -16,7 +16,7 @@ classdef Sim1D < handle
     %
 
     properties (SetAccess = immutable)
-        
+
         stID % ID of the Sim1D object.
 
         domains % Domain instances contained within the Sim1D object.
@@ -27,22 +27,26 @@ classdef Sim1D < handle
 
         function s = Sim1D(domains)
             checklib;
-            
+
             s.stID = -1;
             s.domains = domains;
-            if nargin == 1
-                nd = length(domains);
-                ids = zeros(1, nd);
-                for n=1:nd
-                    ids(n) = domains(n).domainID;
-                end
-                s.stID = callct('sim1D_new', nd, ids);
-            else
+
+            if nargin ~= 1
                 help(Sim1D);
                 error('Wrong number of parameters.');
             end
+            
+            nd = length(domains);
+            ids = zeros(1, nd);
+
+            for n = 1:nd
+                ids(n) = domains(n).domainID;
+            end
+
+            s.stID = callct('sim1D_new', nd, ids);
+
         end
-        
+
         %% Sim1D Class Destructor
 
         function delete(s)
@@ -52,21 +56,22 @@ classdef Sim1D < handle
         end
 
         %% Sim1D Utility Methods
-        
+
         function display(s, fname)
             % Show all domains.
-            
+
             if nargin == 1
                 fname = '-';
             end
+
             callct('sim1D_showSolution', s.stID, fname);
         end
-        
+
         function plotSolution(s, domain, component)
             % Plot a specified solution component.
             %
             % s.plotSolution(domain, component)
-            % 
+            %
             % :param s:
             %    Instance of class 'Sim1D'.
             % :param domain:
@@ -75,7 +80,7 @@ classdef Sim1D < handle
             % :param component:
             %    Name of the component to be plotted.
             %
-            
+
             n = s.stackIndex(domain);
             d = s.domains(n);
             z = d.gridPoints;
@@ -103,7 +108,7 @@ classdef Sim1D < handle
             %
             callct('sim1D_restore', s.stID, fname, id)
         end
-               
+
         function saveSoln(s, fname, id, desc)
             % Save a solution to a file.
             %
@@ -131,7 +136,8 @@ classdef Sim1D < handle
                 desc = '--';
             elseif nargin == 3
                 desc = '--';
-            end            
+            end
+
             callct('sim1D_save', s.stID, fname, id, desc);
         end
 
@@ -152,30 +158,38 @@ classdef Sim1D < handle
             % :return:
             %    Either an 'nPoints' x 1 vector, or 'nPoints' x
             %    'nCOmponents' array.
-            % 
-            
+            %
+
             idom = s.stackIndex(domain);
             d = s.domains(idom);
             np = d.nPoints;
+
             if nargin == 3
                 icomp = d.componentIndex(component);
                 x = zeros(1, np);
+
                 for n = 1:np
                     x(n) = callct('sim1D_value', s.stID, ...
-                                   idom - 1, icomp - 1, n - 1); 
+                                   idom - 1, icomp - 1, n - 1);
                 end
+
             else
                 nc = d.nComponents;
                 x = zeros(nc, np);
+
                 for m = 1:nc
+
                     for n = 1:np
                         x(m, n) = callct('sim1D_value', s.stID, ...
-                                          idom - 1, m - 1, n - 1);
+                                        idom - 1, m - 1, n - 1);
                     end
+
                 end
+
             end
+
         end
-        
+
         function solve(s, loglevel, refineGrid)
             % Solve the problem.
             %
@@ -186,14 +200,14 @@ classdef Sim1D < handle
             % :param loglevel:
             %    Integer flag controlling the amount of diagnostic output.
             %    Zero supresses all output, and 5 produces very verbose
-            %    output. 
+            %    output.
             % :param refineGrid:
             %    Integer, 1 to allow grid refinement, 0 to disallow.
             %
 
             callct('sim1D_solve', s.stID, loglevel, refineGrid);
         end
-        
+
         function writeStats(s)
             % Print statistics for the current solution.
             %
@@ -209,12 +223,12 @@ classdef Sim1D < handle
 
             callct('sim1D_writeStats', s.stID, 1);
         end
-        
+
         %% Sim1D Get Methods
-        
+
         function getInitialSoln(s)
             % Get the initial solution.
-            
+
             callct('sim1D_getInitialSoln', s.stID);
         end
 
@@ -235,12 +249,15 @@ classdef Sim1D < handle
                 n = name;
             else
                 n = callct('sim1D_domainIndex', s.stID, name);
+
                 if n >= 0
-                    n = n+1;
+                    n = n + 1;
                 else
                     error('Domain not found');
                 end
+
             end
+
         end
 
         function z = grid(s, name)
@@ -260,7 +277,7 @@ classdef Sim1D < handle
             d = s.domains(n);
             z = d.gridPoints;
         end
-    
+
         function r = resid(s, domain, rdt, count)
             % Get the residuals.
             %
@@ -278,41 +295,46 @@ classdef Sim1D < handle
                 rdt = 0.0;
                 count = 0;
             end
-            
+
             idom = s.stackIndex(domain);
             d = s.domains(idom);
-            
+
             nc = d.nComponents;
             np = d.nPoints;
-            
+
             r = zeros(nc, np);
             callct('sim1D_eval', s.stID, rdt, count);
+
             for m = 1:nc
+
                 for n = 1:np
                     r(m, n) = callct('sim1D_workValue', ...
-                                      s.stID, idom - 1, m - 1, n - 1);
+                                    s.stID, idom - 1, m - 1, n - 1);
                 end
+
             end
+
         end
-        
+
         %% Sim1D Set Methods
 
         function setFixedTemperature(s, T)
             % Set the temperature used to fix the spatial location of a
-            % freely propagating flame. 
+            % freely propagating flame.
             %
             % s.setFixedTemperature(T)
             %
             % :param T:
             %    Double Temperature to be set. Unit: K.
             %
-            
+
             if T <= 0
                 error('temperature must be positive');
             end
+
             callct('sim1D_setFixedTemperature', s.stID, T);
         end
-        
+
         function setFlatProfile(s, domain, comp, v)
             % Set a component to a value across the entire domain.
             %
@@ -331,9 +353,9 @@ classdef Sim1D < handle
             callct('sim1D_setFlatProfile', s.stID, ...
                     domain - 1, comp - 1, v);
         end
-        
+
         function setGridMin(s, domain, gridmin)
-            % Set the minimum grid spacing on domain. 
+            % Set the minimum grid spacing on domain.
             %
             % s.setGridMin(domain, gridmin)
             %
@@ -341,11 +363,11 @@ classdef Sim1D < handle
             %    Integer ID of the domain.
             % :param gridmin:
             %    Double minimum grid spacing.
-            % 
-            
-            callct('sim1D_setGridMin', s.stID, domain-1, gridmin);
+            %
+
+            callct('sim1D_setGridMin', s.stID, domain - 1, gridmin);
         end
-        
+
         function setMaxJacAge(s, ss_age, ts_age)
             % Set the number of times the Jacobian will be used before it
             % is recomputed.
@@ -360,13 +382,14 @@ classdef Sim1D < handle
             %    Maximum age of the Jacobian for transient analysis. If not
             %    specified, defaults to 'ss_age'.
             %
-            
+
             if nargin == 2
                 ts_age = ss_age;
             end
+
             callct('sim1D_setMaxJacAge', s.stID, ss_age, ts_age);
         end
-        
+
         function setProfile(s, name, comp, p)
             % Specify a profile for one component,
             %
@@ -379,7 +402,7 @@ classdef Sim1D < handle
             % point in the specified domain, and "p(1, n) = 1.0"
             % corresponds to the rightmost grid point. This method can be
             % called at any time, but is usually used to set the initial
-            % guess for the solution. 
+            % guess for the solution.
             %
             % Example (assuming 's' is an instance of class 'Sim1D'):
             %    >> zr = [0.0, 0.1, 0.2, 0.4, 0.8, 1.0];
@@ -416,23 +439,27 @@ classdef Sim1D < handle
 
             np = length(c);
             sz = size(p);
+
             if sz(1) == np + 1;
+
                 for j = 1:np
                     ic = d.componentIndex(c{j});
                     callct('sim1D_setProfile', s.stID, ...
-                            n - 1, ic - 1, sz(2), p(1, :), sz(2), p(j+1, :));
+                            n - 1, ic - 1, sz(2), p(1, :), sz(2), p(j + 1, :));
                 end
+
             elseif sz(2) == np + 1;
                 ic = d.componentIndex(c{j});
                 callct('sim1D_setProfile', s.stID, ...
-                        n - 1, ic - 1, sz(1), p(:, 1), sz(1), p(:, j+1));
+                        n - 1, ic - 1, sz(1), p(:, 1), sz(1), p(:, j + 1));
             else
                 error('Wrong profile shape.');
             end
+
         end
-        
+
         function setRefineCriteria(s, n, ratio, slope, curve, prune)
-            % Set the criteria used to refine the grid. 
+            % Set the criteria used to refine the grid.
             %
             % s.setRefineCriteria(n, ratio, slope, curve, prune)
             %
@@ -452,23 +479,27 @@ classdef Sim1D < handle
             %    it will be deleted, unless either neighboring point is
             %    already marked for deletion.
             %
-                       
+
             if nargin < 3
                 ratio = 10.0;
             end
+
             if nargin < 4
                 slope = 0.8;
             end
+
             if nargin < 5
                 curve = 0.8;
             end
+
             if nargin < 6
                 prune = -0.1;
             end
+
             callct('sim1D_setRefineCriteria', s.stID, ...
-                    n - 1, ratio, slope, curve, prune);         
+                    n - 1, ratio, slope, curve, prune);
         end
-        
+
         function setTimeStep(s, stepsize, steps)
             % Specify a sequence of time steps.
             %
@@ -478,16 +509,16 @@ classdef Sim1D < handle
             %    Initial step size.
             % :param steps:
             %    Vector of number of steps to take before re-attempting
-            %    solution of steady-state problem. 
+            %    solution of steady-state problem.
             %    For example, steps = [1, 2, 5, 10] would cause one time
             %    step to be taken first time the steady-state solution
             %    attempted. If this failed, two time steps would be taken.
             %
 
             callct('sim1D_TimeStep', s.stID, ...
-                    stepsize, length(steps), steps); 
+                    stepsize, length(steps), steps);
         end
-        
+
         function setValue(s, n, comp, localPoints, v)
             % Set the value of a single entry in the solution vector.
             %
@@ -501,7 +532,7 @@ classdef Sim1D < handle
             % in domain 3 to the value 5.6. Note that the local index
             % always begins at 1 at the left of each domain, independent of
             % the global index of the point, wchih depends on the location
-            % of this domain in the Sim1D object. 
+            % of this domain in the Sim1D object.
             %
             % :param s:
             %    Instance of class 'Sim1D'.
@@ -516,9 +547,9 @@ classdef Sim1D < handle
             %
 
             callct('sim1D_setValue', s.stID, ...
-                    n - 1, comp -  1, localPoints - 1, v);
+                    n - 1, comp - 1, localPoints - 1, v);
         end
-        
-    end
-end
 
+    end
+
+end

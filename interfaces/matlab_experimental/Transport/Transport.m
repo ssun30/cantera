@@ -3,7 +3,7 @@ classdef Transport < handle
     properties (Access = private)
         th
     end
-    
+
     properties (SetAccess = immutable)
         trID % ID of Transport object
     end
@@ -28,7 +28,7 @@ classdef Transport < handle
 
     methods
         %% Transport Class Constructor
-        
+
         function tr = Transport(tp, model, loglevel)
             % Transport Class
             %
@@ -54,51 +54,52 @@ classdef Transport < handle
             %
             checklib;
             tr.trID = 0;
+
             if nargin == 2
                 model = 'default'
             end
-            
+
             if nargin < 3
                 loglevel = 4;
             end
-            
+
             if ~isa(tp, 'ThermoPhase')
                 error(['The first argument must be an ', ...
-                      'instance of class ThermoPhase']);
-            else
-                tr.th = tp;
-                if strcmp(model, 'default')
-                    tr.trID = callct('trans_newDefault', ...
-                                       tp.tpID, loglevel);
-                else
-                    tr.trID = callct('trans_new', model, ...
-                                       tp.tpID, loglevel);
-                end
+                       'instance of class ThermoPhase']);
             end
+
+            tr.th = tp;
+
+            if strcmp(model, 'default')
+                tr.trID = callct('trans_newDefault', tp.tpID, loglevel);
+            else
+                tr.trID = callct('trans_new', model, tp.tpID, loglevel);
+            end
+
             tr.tpID = tp.tpID;
         end
-        
+
         %% Transport Class Destructor
-        
+
         function delete(tr)
             % Delete the kernel object.
-            
+
             callct('trans_del', tr.trID);
         end
-        
+
         %% Transport Get Methods
-        
+
         function v = get.viscosity(tr)
             v = callct('trans_viscosity', tr.trID);
         end
-        
+
         function v = get.thermalConductivity(tr)
             v = callct('trans_thermalConductivity', tr.trID);
-        end        
-        
+        end
+
         function v = get.electricalConductivity(tr)
             v = callct('trans_electricalConductivity', tr.trID);
-        end       
+        end
 
         function v = get.mixDiffCoeffs(tr)
             nsp = tr.th.nSpecies;
@@ -106,8 +107,8 @@ classdef Transport < handle
             pt = libpointer('doublePtr', xx);
             callct('trans_getMixDiffCoeffs', tr.trID, nsp, pt);
             v = pt.Value;
-        end         
-        
+        end
+
         function v = get.thermalDiffCoeffs(tr)
             nsp = tr.th.nSpecies;
             xx = zeros(1, nsp);
@@ -115,7 +116,7 @@ classdef Transport < handle
             callct('trans_getThermalDiffCoeffs', tr.trID, nsp, pt);
             v = pt.Value;
         end
-        
+
         function v = get.binDiffCoeffs(tr)
             nsp = tr.th.nSpecies;
             xx = zeros(nsp, nsp);
@@ -123,7 +124,7 @@ classdef Transport < handle
             callct('trans_getBinDiffCoeffs', tr.trID, nsp, pt);
             v = pt.Value;
         end
-        
+
         function v = get.multiDiffCoeffs(tr)
             nsp = tr.th.nSpecies;
             xx = zeros(nsp, nsp);
@@ -133,7 +134,7 @@ classdef Transport < handle
         end
 
         %% Transport Set Methods
-        
+
         function setParameters(tr, type, k, p)
             % Set the parameters.
             %
@@ -142,10 +143,10 @@ classdef Transport < handle
             % :param type:
             % :param k:
             % :param p:
-        
+
             callct('trans_setParameters', tr.trID, type, k, p);
         end
-        
+
         function setThermalConductivity(tr, lam)
             % Set the thermal conductivity.
             %
@@ -154,9 +155,10 @@ classdef Transport < handle
             % :param lam:
             %    Thermal conductivity in W/(m-K).
             %
-            
+
             tr.setParameters(1, 0, lam);
         end
-        
+
     end
+
 end
