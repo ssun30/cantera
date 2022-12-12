@@ -11,10 +11,9 @@
 % Keywords: tutorial, kinetics
 
 help tut5
-LoadCantera;
 
-g = GRI30('None');
-g.TPX = {1500, oneatm, ones(nSpecies(g),1)};
+g = GRI30('none');
+set(g,'T',1500,'P',oneatm,'X',ones(nSpecies(g),1));
 
 % Methods are provided that compute many quantities of interest for
 % kinetics. Some of these are:
@@ -22,10 +21,10 @@ g.TPX = {1500, oneatm, ones(nSpecies(g),1)};
 
 % 1) Stoichiometric coefficients
 
-nu_r   = g.stoichReactant    % reactant stoichiometric coefficient mstix
-nu_p   = g.stoichProduct     % product stoichiometric coefficient mstix
-nu_net = g.stoichNet         % net (product - reactant) stoichiometric
-                             % coefficient mstix
+nu_r   = stoich_r(g)    % reactant stoichiometric coefficient mstix
+nu_p   = stoich_p(g)    % product stoichiometric coefficient mstix
+nu_net = stoich_net(g)  % net (product - reactant) stoichiometric
+                        % coefficient mstix
 
 % For any of these, the (k,i) matrix element is the stoichiometric
 % coefficient of species k in reaction i. Since these coefficient
@@ -35,13 +34,13 @@ nu_net = g.stoichNet         % net (product - reactant) stoichiometric
 
 % 2) Reaction rates of progress
 
-% Methods ropForward, ropReverse, and ropNet return column vectors containing
+% Methods rop_f, rop_r, and rop_net return column vectors containing
 % the forward, reverse, and net (forward - reverse) rates of
 % progress, respectively, for all reactions.
 
-qf = g.ropForward;
-qr = g.ropReverse;
-qn = g.ropNet;
+qf = rop_f(g);
+qr = rop_r(g);
+qn = rop_net(g);
 rop = [qf, qr, qn]
 
 % This plots the rates of progress
@@ -55,9 +54,9 @@ legend('forward','reverse','net');
 % column vectors containing the creation, destruction, and net
 % production (creation - destruction) rates, respectively, for all species.
 
-cdot = g.creationRates;
-ddot = g.destructionRates;
-wdot = g.netProdRates;
+cdot = creationRates(g);
+ddot = destructionRates(g);
+wdot = netProdRates(g);
 rates = [cdot, ddot, wdot]
 
 % This plots the production rates
@@ -80,17 +79,17 @@ net = [wdot, wdot2, wdot - wdot2]
 
 % 4) Reaction equations
 
-e8    = g.reactionEqn(8)             % equation for reaction 8
-e1_10 = g.reactionEqn(1:10)          % equation for rxns 1 - 10
-eqs   = g.reactionEqn                % all equations
+e8    = reactionEqn(g,8)             % equation for reaction 8
+e1_10 = reactionEqn(g,1:10)          % equation for rxns 1 - 10
+eqs   = reactionEqn(g)               % all equations
 
 % 5) Equilibrium constants
 
 % The equilibrium constants are computed in concentration units,
 % with concentrations in kmol/m^3.
 
-kc = g.Kc;
-for i = 1:g.nReactions
+kc = equil_Kc(g);
+for i = 1:nReactions(g)
    fprintf('%50s  %13.5g', eqs{i}, kc(i))
 end
 
@@ -100,9 +99,9 @@ end
 % to the forward rate coefficient. By default, the multiplier is
 % 1.0 for all reactions.
 
-for i = 1:g.nReactions
-   g.setMultiplier(i, 2*i);
-   m = g.multiplier(i);
+for i = 1:nReactions(g)
+   setMultiplier(g, i, 2*i);
+   m = multiplier(g, i);
 end
 
 clear all
