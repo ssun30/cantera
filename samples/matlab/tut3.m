@@ -4,8 +4,6 @@
 
 help tut3
 
-LoadCantera;
-
 % Suppose you have created a Cantera object and want to know what
 % methods are available for it, and get help on using the methods.
 
@@ -36,7 +34,8 @@ methods Solution -full
 % Now that you see what methods are available, you can type 'help
 % <method_name>' to print help text for any method. For example,
 
-help MolecularWeights
+help setTemperature
+help setMassFractions
 help rop_net
 
 % For help on how to construct objects of a given class, type 'help

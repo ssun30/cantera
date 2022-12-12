@@ -11,8 +11,6 @@
 
 help tut2
 
-LoadCantera;
-
 t0 = cputime;
 
 % In the last tutorial, we used function GRI30 to create an object
