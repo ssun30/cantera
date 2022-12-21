@@ -10,23 +10,11 @@ Defining Functions
 ------------------
 .. mat:autoclass:: Func
 
-.. mat:autofunction:: fplus
-.. mat:autofunction:: frdivide
-.. mat:autofunction:: ftimes
-.. mat:autofunction:: gaussian
-.. mat:autofunction:: polynom
-
-
-Base Classes
-------------
-
-Flow Device Class
-^^^^^^^^^^^^^^^^^
-.. mat:autoclass:: FlowDevice
-
-Reactor Class
-^^^^^^^^^^^^^
-.. mat:autoclass:: Reactor
+.. mat:autoclass:: fplus
+.. mat:autoclass:: frdivide
+.. mat:autoclass:: ftimes
+.. mat:autoclass:: gaussian
+.. mat:autoclass:: polynom
 
 Reactor Networks
 ----------------
@@ -40,19 +28,20 @@ Reactor Walls
 -------------
 .. mat:autoclass:: Wall
 
-Presets
--------
-
 Flow Devices
 ^^^^^^^^^^^^
-.. mat:autofunction:: MassFlowController
-.. mat:autofunction:: Valve
+.. mat:autoclass:: FlowDevice
+   
+.. mat:autoclass:: MassFlowController
+.. mat:autoclass:: Valve
 
-Reactors
-^^^^^^^^
-.. mat:autofunction:: ConstPressureReactor
-.. mat:autofunction:: FlowReactor
-.. mat:autofunction:: IdealGasConstPressureReactor
-.. mat:autofunction:: IdealGasReactor
-.. mat:autofunction:: Reservoir
+Reactor Class
+^^^^^^^^^^^^^
+.. mat:autoclass:: Reactor
+
+.. mat:autoclass:: ConstPressureReactor
+.. mat:autoclass:: FlowReactor
+.. mat:autoclass:: IdealGasConstPressureReactor
+.. mat:autoclass:: IdealGasReactor
+.. mat:autoclass:: Reservoir
 
