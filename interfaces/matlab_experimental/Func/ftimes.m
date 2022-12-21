@@ -4,14 +4,15 @@ classdef ftimes < Func
     % f = ftimes(a, b)
     %
     % :param a:
-    %     Instance of class :mat:func:`Func`
+    %     Instance of class :mat:class:`Func`
     % :param b:
-    %     Instance of class :mat:func:`Func`
+    %     Instance of class :mat:class:`Func`
     % :return:
-    %     Instance of class :mat:func:`Func`
+    %     Instance of class :mat:class:`ftimes`
     %
     methods
 
+        % Constructor
         function f = ftimes(a, b)
             f = f@Func('prod', a, b);
         end

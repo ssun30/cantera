@@ -19,27 +19,27 @@ Flow Domains
 
 Axisymmetric Flow
 ^^^^^^^^^^^^^^^^^
-.. mat:autofunction:: AxisymmetricFlow
+.. mat:autoclass:: AxisymmetricFlow
 
 Inlet
 ^^^^^
-.. mat:autofunction:: Inlet
+.. mat:autoclass:: Inlet
 
 Outlet
 ^^^^^^
-.. mat:autofunction:: Outlet
+.. mat:autoclass:: Outlet
 
 Outlet Reservoir
 ^^^^^^^^^^^^^^^^
-.. mat:autofunction:: OutletRes
+.. mat:autoclass:: OutletRes
 
 Surface
 ^^^^^^^
-.. mat:autofunction:: Surface
+.. mat:autoclass:: Surface
 
 Symmetry Plane
 ^^^^^^^^^^^^^^
-.. mat:autofunction:: SymmPlane
+.. mat:autoclass:: SymmPlane
 
 Composite Domains
 -----------------
@@ -50,5 +50,5 @@ Counter Flow Diffusion Flame
 
 Free Flame
 ^^^^^^^^^^
-.. mat:autofunction:: FreeFlame
+.. mat:autoclass:: FreeFlame
 
