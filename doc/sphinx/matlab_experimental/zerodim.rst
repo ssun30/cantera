@@ -6,15 +6,15 @@ Zero-Dimensional Reactor Networks
 .. contents::
    :local:
 
-Defining Functions
-------------------
-.. mat:autoclass:: Func
+Reactor Class
+^^^^^^^^^^^^^
+.. mat:autoclass:: Reactor
 
-.. mat:autoclass:: fplus
-.. mat:autoclass:: frdivide
-.. mat:autoclass:: ftimes
-.. mat:autoclass:: gaussian
-.. mat:autoclass:: polynom
+.. mat:autoclass:: ConstPressureReactor
+.. mat:autoclass:: FlowReactor
+.. mat:autoclass:: IdealGasConstPressureReactor
+.. mat:autoclass:: IdealGasReactor
+.. mat:autoclass:: Reservoir
 
 Reactor Networks
 ----------------
@@ -34,14 +34,4 @@ Flow Devices
    
 .. mat:autoclass:: MassFlowController
 .. mat:autoclass:: Valve
-
-Reactor Class
-^^^^^^^^^^^^^
-.. mat:autoclass:: Reactor
-
-.. mat:autoclass:: ConstPressureReactor
-.. mat:autoclass:: FlowReactor
-.. mat:autoclass:: IdealGasConstPressureReactor
-.. mat:autoclass:: IdealGasReactor
-.. mat:autoclass:: Reservoir
 

@@ -46,7 +46,7 @@ Composite Domains
 
 Counter Flow Diffusion Flame
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.. mat:autofunction:: CounterFlowDiffusionFlame
+.. mat:autoclass:: CounterFlowDiffusionFlame
 
 Free Flame
 ^^^^^^^^^^
