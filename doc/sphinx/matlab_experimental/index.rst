@@ -1,7 +1,7 @@
 .. _sec-matlab-documentation:
 
-Matlab Toolbox (New) Documentation
-==================================
+Matlab Toolbox (Experimental) Documentation
+===========================================
 
 .. toctree::
    :maxdepth: 2
@@ -10,6 +10,7 @@ Matlab Toolbox (New) Documentation
    thermo
    transport
    kinetics
+   func
    zerodim
    onedim
    constants
