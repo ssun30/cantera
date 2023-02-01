@@ -1,15 +1,13 @@
-function e = geterr()
+function e = ctGetErr()
     % Get the error message from a Cantera error.
     %
-    checklib;
 
     try
-        buflen = calllib(ct, 'ct_getCanteraError', 0, '');
+        buflen = calllib(ctSharedLibrary, 'ct_getCanteraError', 0, '');
         aa = char(ones(1, buflen));
         ptr = libpointer('cstring', aa);
-        [iok, bb] = calllib(ct, 'ct_getCanteraError', buflen, ptr);
+        [iok, bb] = calllib(ctSharedLibrary, 'ct_getCanteraError', buflen, ptr);
         e = bb;
-        clear aa bb ptr
     catch ME
         e = getReport(ME);
     end
