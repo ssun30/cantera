@@ -7,5 +7,5 @@ function v = canteraGitCommit()
     %     A string containing the Git commit hash for the current version of Cantera.
     %
     checklib;
-    v = callct2('ct_getGitCommit');
+    v = ctString('ct_getGitCommit');
 end
