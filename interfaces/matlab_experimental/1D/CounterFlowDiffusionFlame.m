@@ -28,7 +28,7 @@ classdef CounterFlowDiffusionFlame < Sim1D
     methods
 
         function flame = CounterFlowDiffusionFlame(left, flow, right, ...
-                                                    tp_f, tp_o, oxidizer)
+                                                   tp_f, tp_o, oxidizer)
 
             % Constructor
             
