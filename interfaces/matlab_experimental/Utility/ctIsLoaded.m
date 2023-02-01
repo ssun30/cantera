@@ -1,5 +1,5 @@
 function i = ctIsLoaded()
-    if ~libisloaded(ctSharedLibrary)
+    if ~libisloaded(ctLib)
         error('Cantera is not loaded');
     end
 

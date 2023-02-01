@@ -1,4 +1,4 @@
-function str = ctSharedLibrary()
+function str = ctLib()
     % Return name of Cantera Shared Library depending on OS.
     if ispc
         str = 'cantera_shared';

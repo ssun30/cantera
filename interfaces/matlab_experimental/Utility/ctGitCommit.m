@@ -6,6 +6,6 @@ function v = canteraGitCommit()
     % :return:
     %     A string containing the Git commit hash for the current version of Cantera.
     %
-    checklib;
+    ctIsLoaded;
     v = ctString('ct_getGitCommit');
 end
