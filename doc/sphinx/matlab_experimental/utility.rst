@@ -8,8 +8,8 @@ Utility Functions
 
 Utilities
 ---------
-.. mat:autofunction:: canteraGitCommit
-.. mat:autofunction:: canteraVersion
-.. mat:autofunction:: cleanup
-.. mat:autofunction:: getDataDirectories
-.. mat:autofunction:: geterr
+.. mat:autofunction:: ctGitCommit
+.. mat:autofunction:: ctVersion
+.. mat:autofunction:: ctCleanUp
+.. mat:autofunction:: ctDataDirectories
+.. mat:autofunction:: ctGetErr
