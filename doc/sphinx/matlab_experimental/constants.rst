@@ -8,6 +8,6 @@ Physical Constants
 
 Data
 ----
-.. mat:autofunction:: faradayconstant
-.. mat:autofunction:: gasconstant
-.. mat:autofunction:: oneatm
+.. mat:autofunction:: FaradayConstant
+.. mat:autofunction:: GasConstant
+.. mat:autofunction:: OneAtm

@@ -6,12 +6,12 @@ Matlab Toolbox (Experimental) Documentation
 .. toctree::
    :maxdepth: 2
 
+   constants
+   func
    importing
+   kinetics
+   onedim
    thermo
    transport
-   kinetics
-   func
-   zerodim
-   onedim
-   constants
    utility
+   zerodim
