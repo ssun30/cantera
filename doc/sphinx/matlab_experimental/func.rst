@@ -12,4 +12,6 @@ Defining Functions
 .. mat:autoclass:: frdivide
 .. mat:autoclass:: ftimes
 .. mat:autoclass:: gaussian
+   :noindex:
 .. mat:autoclass:: polynom
+   :noindex:
