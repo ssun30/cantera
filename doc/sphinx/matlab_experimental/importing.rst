@@ -1,4 +1,4 @@
-.. mat:currentmodule:: Phases
+.. mat:currentmodule:: Base
 
 Objects Representing Phases
 ===========================
@@ -10,13 +10,15 @@ Solution
 --------
 .. mat:autoclass:: Solution
 
-Mixture
--------
-.. mat:autoclass:: Mixture
-
 Interface
 ---------
 .. mat:autoclass:: Interface
+
+.. mat:currentmodule:: Phases
+
+Mixture
+-------
+.. mat:autoclass:: Mixture
 
 Pure Fluid Phases
 -----------------
@@ -28,4 +30,3 @@ Pure Fluid Phases
 .. mat:autofunction:: Nitrogen
 .. mat:autofunction:: Oxygen
 .. mat:autofunction:: Water
-      

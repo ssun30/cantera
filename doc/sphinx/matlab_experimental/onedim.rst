@@ -1,4 +1,4 @@
-.. mat:currentmodule:: 1D
+.. mat:currentmodule:: OneDim
 
 One-dimensional Reacting Flows
 ==============================
@@ -16,10 +16,19 @@ Sim1D
 
 Flow Domains
 ------------
+.. mat:autoclass:: Flow1D
 
 Axisymmetric Flow
 ^^^^^^^^^^^^^^^^^
 .. mat:autoclass:: AxisymmetricFlow
+
+Free Flow
+^^^^^^^^^
+.. mat:autoclass:: FreeFlow
+
+Boundary Domains
+----------------
+.. mat:autoclass:: Boundary1D
 
 Inlet
 ^^^^^
@@ -37,6 +46,10 @@ Surface
 ^^^^^^^
 .. mat:autoclass:: Surface
 
+ReactingSurface
+^^^^^^^^^^^^^^^
+.. mat:autoclass:: ReactingSurface
+
 Symmetry Plane
 ^^^^^^^^^^^^^^
 .. mat:autoclass:: SymmPlane
@@ -47,8 +60,4 @@ Composite Domains
 Counter Flow Diffusion Flame
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 .. mat:autoclass:: CounterFlowDiffusionFlame
-
-Free Flame
-^^^^^^^^^^
-.. mat:autoclass:: FreeFlame
 
