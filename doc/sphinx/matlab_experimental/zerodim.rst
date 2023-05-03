@@ -1,4 +1,4 @@
-.. mat:currentmodule:: Reactors
+.. mat:currentmodule:: Reactor
 
 Zero-Dimensional Reactor Networks
 =================================
@@ -7,7 +7,7 @@ Zero-Dimensional Reactor Networks
    :local:
 
 Reactor Class
-^^^^^^^^^^^^^
+-------------
 .. mat:autoclass:: Reactor
 
 .. mat:autoclass:: ConstPressureReactor
@@ -29,9 +29,8 @@ Reactor Walls
 .. mat:autoclass:: Wall
 
 Flow Devices
-^^^^^^^^^^^^
+------------
 .. mat:autoclass:: FlowDevice
    
 .. mat:autoclass:: MassFlowController
 .. mat:autoclass:: Valve
-
