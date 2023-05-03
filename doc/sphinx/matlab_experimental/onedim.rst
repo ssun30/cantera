@@ -60,4 +60,3 @@ Composite Domains
 Counter Flow Diffusion Flame
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 .. mat:autoclass:: CounterFlowDiffusionFlame
-

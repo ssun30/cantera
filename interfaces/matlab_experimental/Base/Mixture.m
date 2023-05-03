@@ -20,7 +20,7 @@ classdef Mixture < handle
     % on the amount of this phase. Mixture objects, on the other hand,
     % represent the full extensive state.
     %
-    % Mixture objects are 'lightweight' in the sense that they do not
+    % Mixture objects are "lightweight" in the sense that they do not
     % store parameters needed to compute thermodynamic or kinetic
     % properties of the phases. These are contained in the
     % ('heavyweight') phase objects. Multiple mixture objects may be

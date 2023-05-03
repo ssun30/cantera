@@ -1,4 +1,4 @@
-.. mat:currentmodule:: Thermo
+.. mat:currentmodule:: Base
 
 Thermodynamic Properties
 ========================
@@ -9,4 +9,3 @@ Thermodynamic Properties
 ThermoPhase
 -----------
 .. mat:autoclass:: ThermoPhase
-   

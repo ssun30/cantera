@@ -1,4 +1,4 @@
-.. mat:currentmodule:: Kinetics
+.. mat:currentmodule:: Base
 
 Chemical Kinetics
 =================
@@ -9,4 +9,3 @@ Chemical Kinetics
 Kinetics
 --------
 .. mat:autoclass:: Kinetics
-   

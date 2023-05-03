@@ -1,4 +1,4 @@
-.. mat:currentmodule:: Transport
+.. mat:currentmodule:: Base
 
 Transport Properties
 ====================
@@ -9,4 +9,3 @@ Transport Properties
 Transport
 ---------
 .. mat:autoclass:: Transport
-   

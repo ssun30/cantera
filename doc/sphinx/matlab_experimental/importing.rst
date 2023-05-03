@@ -14,8 +14,6 @@ Interface
 ---------
 .. mat:autoclass:: Interface
 
-.. mat:currentmodule:: Phases
-
 Mixture
 -------
 .. mat:autoclass:: Mixture
