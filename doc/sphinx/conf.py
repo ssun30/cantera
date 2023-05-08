@@ -326,3 +326,6 @@ man_pages = [
 
 matlab_src_dir = os.path.abspath('../../interfaces/matlab_experimental')
 
+matlab_short_links = True
+
+autoclass_content = 'init'

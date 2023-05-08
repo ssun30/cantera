@@ -1,5 +1,27 @@
 classdef Reactor < handle
-
+    % Reactor Class ::
+    %
+    %     >> r = Reactor(content, typ)
+    %
+    % A :mat:class:`Reactor` object simulates a perfectly-stirred reactor. 
+    % It has a time-dependent tstate, and may be coupled to other
+    % reactors through flow lines or through walls that may expand
+    % or contract and/orconduct heat.
+    %
+    % :param contents:
+    %    Instance of :mat:class:`Solution` representing the contents of
+    %    the reactor.
+    % :param typ:
+    %    Character array of reactor type. Options are:
+    %      - `Reservoir`
+    %      - `Reactor`
+    %      - `FlowReactor`
+    %      - `ConstPressureReactor`
+    %      - `IdealGasReactor`
+    %      - `IdealGasConstPressureReactor`
+    % :return:
+    %    Instance of :mat:class:`Reactor`.
+    
     properties (SetAccess = immutable)
 
         type % Type of Reactor.
@@ -87,28 +109,6 @@ classdef Reactor < handle
         %% Reactor Class Constructor
 
         function r = Reactor(content, typ)
-            % Reactor Class ::
-            %
-            %     >> r = Reactor(content, typ)
-            %
-            % A :mat:class:`Reactor` object simulates a perfectly-stirred reactor. 
-            % It has a time-dependent tstate, and may be coupled to other
-            % reactors through flow lines or through walls that may expand
-            % or contract and/orconduct heat.
-            %
-            % :param contents:
-            %    Instance of :mat:class:`Solution` representing the contents of
-            %    the reactor.
-            % :param typ:
-            %    Character array of reactor type. Options are:
-            %      - `Reservoir`
-            %      - `Reactor`
-            %      - `FlowReactor`
-            %      - `ConstPressureReactor`
-            %      - `IdealGasReactor`
-            %      - `IdealGasConstPressureReactor`
-            % :return:
-            %    Instance of :mat:class:`Reactor`.
 
             ctIsLoaded;
 

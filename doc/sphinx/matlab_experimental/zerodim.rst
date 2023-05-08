@@ -1,4 +1,4 @@
-.. mat:currentmodule:: Reactor
+.. mat:currentmodule:: Reactors
 
 Zero-Dimensional Reactor Networks
 =================================
