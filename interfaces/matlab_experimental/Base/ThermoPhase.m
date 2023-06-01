@@ -459,7 +459,7 @@ classdef ThermoPhase < handle
         %% ThermoPhase Utility Methods
 
         function display(tp)
-            ctFunc('thermo_print', tp.tpID, 1, 1);
+            disp(tp.report);
         end
 
         function tp = equilibrate(tp, xy, solver, rtol, maxsteps, maxiter, loglevel)
@@ -1030,7 +1030,11 @@ classdef ThermoPhase < handle
         end
 
         function volume = get.V(tp)
-            volume = 1 / tp.D;
+            if strcmp(tp.basis, 'molar')
+                volume = 1 / tp.molarDensity;
+            else
+                volume = 1 / tp.D;
+            end
         end
 
         function moleFractions = get.X(tp)
@@ -1323,6 +1327,9 @@ classdef ThermoPhase < handle
 
             if isa(xx, 'double') & ~isempty(xx)
                 nsp = tp.nSpecies;
+                if length(xx) ~= nsp
+                    error('Length of array must be equal to number of species.')
+                end
 
                 if abs(sum(xx) - 1) <= tol
                     norm = 0;
