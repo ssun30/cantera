@@ -1325,7 +1325,11 @@ classdef ThermoPhase < handle
         function set.X(tp, xx)
             tol = 1e-9;
 
-            if isa(xx, 'double') & ~isempty(xx)
+            if isempty(xx)
+                error('Array cannot be empty');
+            end
+
+            if isa(xx, 'double')
                 nsp = tp.nSpecies;
                 if length(xx) ~= nsp
                     error('Length of array must be equal to number of species.')
