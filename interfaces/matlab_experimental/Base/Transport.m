@@ -28,10 +28,6 @@ classdef Transport < handle
         th % ID of the ThermoPhase object used to create the Transport object.
     end
 
-    properties (SetAccess = immutable)
-        trID % ID of Transport object.
-    end
-
     properties (SetAccess = protected)
 
         viscosity % Dynamic viscosity. Unit: Pa*s.
@@ -47,6 +43,8 @@ classdef Transport < handle
         binDiffCoeffs % Binary diffusion coefficients. Unit: m^2/s.
 
         multiDiffCoeffs % Multicomponent diffusion coefficients. Unit: m^2/s.
+
+        trID % ID of the :mat:class:`Transport` object.
 
     end
 

@@ -49,8 +49,18 @@ classdef Solution < handle & ThermoPhase & Kinetics & Transport
     %     Instance of class :mat:class:`Solution`.
 
     properties (SetAccess = immutable)
-        phaseID % ID of the solution.
-        solnName % Name of the solution.
+        phaseID % ID of the :mat:class:`Solution` object.
+        solnName % Name of the :mat:class:`Solution` object.
+    end
+
+    properties (SetAccess = public)
+
+        % Get/Set the transport model associated with the :mat:class:`Solution` object.
+        %
+        % Setting a new transport model deletes the underlying C++ Transport object and
+        % replaces it with a new one implementing the specified model.
+        transportModel
+
     end
 
     methods
@@ -90,6 +100,16 @@ classdef Solution < handle & ThermoPhase & Kinetics & Transport
         function delete(s)
             % Delete :mat:class:`Solution` object.
             ctFunc('soln_del', s.phaseID);
+        end
+
+        %% Solution Class Get/Set Methods
+
+        function t = get.transportModel(s)
+            t = ctString('trans_transportModel', s.trID);
+        end
+
+        function set.transportModel(s, t)
+            s.trID = ctFunc('soln_setTransportModel', s.phaseID, t);
         end
 
     end
