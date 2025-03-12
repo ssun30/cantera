@@ -75,6 +75,7 @@ extern "C" {
     CANTERA_CAPI int wall_setArea(int i, double v);
     CANTERA_CAPI int wall_setThermalResistance(int i, double rth);
     CANTERA_CAPI int wall_setHeatTransferCoeff(int i, double u);
+    CANTERA_CAPI double wall_heatTransferCoeff(int i);
     CANTERA_CAPI int wall_setHeatFlux(int i, int n);
     CANTERA_CAPI int wall_setExpansionRateCoeff(int i, double k);
     CANTERA_CAPI int wall_setVelocity(int i, int n);

@@ -583,6 +583,15 @@ extern "C" {
         }
     }
 
+    double wall_heatTransferCoeff(int i)
+    {
+        try {
+            return WallCabinet::as<Wall>(i)->getHeatTransferCoeff();
+        } catch (...) {
+            return handleAllExceptions(DERR, DERR);
+        }
+    }
+
     int wall_setHeatFlux(int i, int n)
     {
         try {

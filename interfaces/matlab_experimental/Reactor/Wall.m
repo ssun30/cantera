@@ -148,6 +148,10 @@ classdef Wall < handle
             v = ctFunc('wall_expansionRate', w.id);
         end
 
+        function k = get.heatTransferCoeff(w)
+            k = ctFunc('wall_heatTransferCoeff', w.id);
+        end
+
         %% ReactorNet set methods
 
         function set.name(w, name)
