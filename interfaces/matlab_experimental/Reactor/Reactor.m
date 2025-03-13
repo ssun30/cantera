@@ -88,7 +88,7 @@ classdef Reactor < handle
     methods
         %% Reactor Class Constructor
 
-        function r = Reactor(content, typ, name)
+        function r = Reactor(varargin)
             % Reactor Class ::
             %
             %     >> r = Reactor(content, typ, name)
@@ -116,23 +116,23 @@ classdef Reactor < handle
 
             ctIsLoaded;
 
-            if nargin == 0
-                error('Reactor contents must be specified')
-            elseif nargin == 1
-                typ = 'Reactor';
-                name = '(none)';
-            elseif nargin == 2
-                name = '(none)';
-            elseif nargin > 3
-                error('too many arguments');
-            end
+            param = inputParser;
 
-            if ~isa(content, 'Solution')
-                error('Reactor contents must be an object of type "Solution"');
-            end
+            param.addRequired('content', @(x) isa(x, 'Solution'));
+            param.addOptional('typ', 'Reactor', @(x) ischar(x) || isstring(x));
+            param.addOptional('name', '(none)', @(x) ischar(x) || isstring(x));
+            param.addOptional('V0', 1, @(x) isnumeric(x) && isscalar(x));
 
-            r.type = char(typ);
+            param.parse(varargin{:});
+            content = param.Results.content;
+            typ = param.Results.typ;
+            name = param.Results.name;
+            V0 = param.Results.V0;
+
+            r.type = typ;
             r.id = ctFunc('reactor_new', typ, content.solnID, name);
+            r.contents = content;
+            r.V = V0;
         end
 
         %% Reactor Class Destructor
