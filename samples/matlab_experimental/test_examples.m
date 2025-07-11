@@ -52,7 +52,7 @@ function run_test_examples()
         disp('❌ Failed: (none)');
     end
 
-    disp(' ');
+    disp('  ');
 
     clear all
     close all
