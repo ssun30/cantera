@@ -74,15 +74,13 @@ for k = 1:length(model_names)
     time = 0.0;
     estIgnDelay = 1.0; % seconds
     counter = 0;
-    dt = 5.0e-7;
+    dt = 1e-5;
     
     time_data = [];
     H2O_X_data = [];
 
     while time < estIgnDelay
-        time = time + dt;
-        sim.advance(time);
-        time = sim.time;
+        time = sim.step();
         if mod(counter, 10) == 0
             time_data(end+1) = time * 1e6;  % convert to µs
             H2O_X_data(end+1) = gas.moleFraction({'H2O'});
