@@ -30,13 +30,13 @@
 clear all;
 close all;
 
-tic % total running time of the script
+tic
 help shock_tube
 
-file = 'example_data/ammonia-CO-H2-Alzueta-2023.yaml'; % Had to add example/data here to find the file
+file = 'example_data/ammonia-CO-H2-Alzueta-2023.yaml';
 %% Models and colors
 models = struct('Original', 'baseline', 'LMR_R', 'linear-Burke');
-colors = struct('Original', [0.6, 0.6, 0.6], 'LMR_R', [0.5, 0, 0.5]); % grey and purple
+colors = struct('Original', [0.6, 0.6, 0.6], 'LMR_R', [0.5, 0, 0.5]);
 
 results = struct();
 
