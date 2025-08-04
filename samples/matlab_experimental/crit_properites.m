@@ -7,7 +7,7 @@
 clear all;
 close all;
 
-tic % total runtime of script
+tic
 help crit_properites
 
 %% Create a pure fluid object
@@ -37,7 +37,7 @@ fprintf('Critical State Properties\n');
 fprintf('%-16s   %-7s   %-10s   %-7s\n', 'Fluid', 'Tc [K]', 'Pc [Pa]', 'Zc');
 fprintf('%s   %s   %s   %s\n', repmat('-',1,16), repmat('-',1,7), repmat('-',1,10), repmat('-',1,7));
 
-% Loop through fluids
+%% Loop through fluids
 for i = 1:length(names)
     name = names{i};
     f = fluids.(name);

@@ -35,7 +35,7 @@ sf = zeros(n,1); sg = zeros(n,1); sfg = zeros(n,1);
 %% Loop through temperatures and get saturated liquid/vapor properties
 for i = 1:n
     T_i = T_vec(i);
-    T(i) = T_i - 273.15; % store in degC
+    T(i) = T_i - 273.15;
 
     % Saturated vapor
     w.TQ = {T_i, 1};
