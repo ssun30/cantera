@@ -1,10 +1,17 @@
 % runs selected examples without pausing
-run_test_examples();
+clear all
+close all
+ctLoad
+if run_test_examples()
+    disp('test_examples run successfully');
+end
+ctUnload
+clear all
+close all
 
-function run_test_examples()
-    clear all
-    close all
-    ctLoad
+function success = run_test_examples()
+
+    success = false;
 
     examples = {
         'equil', 'isentropic', 'reactor1', 'reactor2', 'surf_reactor', ...
@@ -50,13 +57,10 @@ function run_test_examples()
         fprintf('❌ Failed: %s\n', strjoin(failed, ', '));
     else
         disp('❌ Failed: (none)');
+        success = true;
     end
 
     disp(' ');
-
-    clear all
-    close all
-    ctUnload
-
-    disp('Test example run successfully.');
+    
+    
 end
