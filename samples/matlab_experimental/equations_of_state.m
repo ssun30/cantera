@@ -160,7 +160,6 @@ p_arr = 1e5 * p_arr(:);
 % Initialize matrices to hold densities
 density_ideal = zeros(length(p_arr), length(T_arr));
 density_RK = zeros(length(p_arr), length(T_arr));
-%density_CP = zeros(length(p_arr), length(T_arr));
 
 % Loop over pressure and temperature to compute densities
 for i = 1:length(p_arr)

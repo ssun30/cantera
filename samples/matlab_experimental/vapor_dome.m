@@ -50,7 +50,7 @@ for i = 1:n
     uf(i) = w.U/1e3;
     hf(i) = w.H/1e3;
     sf(i) = w.S/1e3;
-    
+
     % Pressure (same for both states)
     P(i) = w.P/1e5;
 end

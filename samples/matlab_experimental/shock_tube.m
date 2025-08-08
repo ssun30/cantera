@@ -1,11 +1,11 @@
 %% Shock-tube species profiles as a function of time
-% Simulate species profiles for a shock tube as a function of time, and 
-% observe the impact of incorporating the reduced-pressure linear mixture 
+% Simulate species profiles for a shock tube as a function of time, and
+% observe the impact of incorporating the reduced-pressure linear mixture
 % rule (LMR-R) in such calculations.
 %
 % Here we predict the H2O mole fraction time profiles for a mixture of 1163
-% ppm H2O2/1330 ppm H2O/665 ppm O2/20% CO2/Ar following reflected shock 
-% waves (1196 K, 2.127 atm) and compare results against the experimental 
+% ppm H2O2/1330 ppm H2O/665 ppm O2/20% CO2/Ar following reflected shock
+% waves (1196 K, 2.127 atm) and compare results against the experimental
 % measurements of Shao et al. [1] Two models are compared in this example:
 %
 % 1. A 2023 model of H2 and NH3 chemistry published by Alzueta et al. [2]
@@ -14,15 +14,15 @@
 % References:
 %
 % [1] J. Shao, R. Choudhary, D. F. Davidson, R. K. Hanson, Shock tube/laser
-% absorption measurement of the rate constant of the reaction: H2O2+CO2 = 
+% absorption measurement of the rate constant of the reaction: H2O2+CO2 =
 % 2OH+CO2, Proc. Combust. Inst. 39 (2023) 735 – 743.
 %
-% [2] M. U. Alzueta, I. Salas, H. Hashemi, P. Glarborg, CO-assisted NH3 
+% [2] M. U. Alzueta, I. Salas, H. Hashemi, P. Glarborg, CO-assisted NH3
 % oxidation, Combust. Flame 257 (2023) 112438.
 %
-% [3] P. J. Singal, J. Lee, L. Lei, R. L. Speth, M. P. Burke, 
-% Implementation of New Mixture Rules Has a Substantial Impact on 
-% Combustion Predictions for H2 and NH3, Proc. Combust. Inst. 40 (2024) 
+% [3] P. J. Singal, J. Lee, L. Lei, R. L. Speth, M. P. Burke,
+% Implementation of New Mixture Rules Has a Substantial Impact on
+% Combustion Predictions for H2 and NH3, Proc. Combust. Inst. 40 (2024)
 % 105779.
 %
 % .. tags:: Matlab, shock tube, kinetics, combustion
@@ -54,7 +54,7 @@ model_names = fieldnames(models);
 for k = 1:length(model_names)
     model_key = model_names{k};
     mech_name = models.(model_key);
-    
+
     % Define mixture composition
     X_H2O2 = 1163e-6;
     X_H2O = 1330e-6;
@@ -74,8 +74,7 @@ for k = 1:length(model_names)
     time = 0.0;
     estIgnDelay = 1.0; % seconds
     counter = 0;
-    dt = 1e-5;
-    
+
     time_data = [];
     H2O_X_data = [];
 
@@ -115,5 +114,3 @@ grid on;
 
 
 toc
-
-

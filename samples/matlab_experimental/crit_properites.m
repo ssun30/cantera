@@ -1,5 +1,5 @@
 %% Critical state properties
-% Print the critical state properties for the fluids for which Cantera has 
+% Print the critical state properties for the fluids for which Cantera has
 % built-in liquid/vapor equations of state.
 %
 % .. tags:: Matlab, thermodynamics, multiphase, non-ideal fluid

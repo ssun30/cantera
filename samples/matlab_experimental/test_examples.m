@@ -40,7 +40,6 @@ function success = run_test_examples()
         end
     end
 
-
         % Summary report
     disp(' ');
     disp('============================');
@@ -61,6 +60,5 @@ function success = run_test_examples()
     end
 
     disp(' ');
-    
-    
+
 end
