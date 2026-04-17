@@ -1370,16 +1370,12 @@ jobs:
       uses: matlab-actions/run-command@v2
       with:
         command: |
-          addpath('/home/runner/work/cantera/cantera/interfaces/matlab/Setup');
-          buildToolbox;
+          addpath('/home/runner/work/cantera/cantera/interfaces/matlab/Packaging');
+          version = getenv('TOOLBOX_VERSION');
+          buildToolbox('version', version);
     - name: Upload Toolbox Artifact
       uses: actions/upload-artifact@v4
       with:
         name: Cantera_MATLAB_toolbox
-        path: build/*.mltbx
+        path: interfaces/matlab/Packaging/*.mltbx
         retention-days: 14
-    # MLTBX test is disabled until we can download packaged binaries and header files
-    # - name: Test the MLTBX toolbox
-    #   uses: matlab-actions/run-tests@v2
-    #   with:
-    #     select-by-folder: /home/runner/work/cantera/cantera/test/matlab_experimental
