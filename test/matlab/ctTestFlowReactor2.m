@@ -71,7 +71,7 @@ classdef ctTestFlowReactor2 < ctTestCase
                 self.net = ct.zeroD.ReactorNet({r1, r2});
             catch ME
                 self.verifySubstring(ME.identifier, 'Cantera:ctError');
-                self.verifySubstring(ME.message,  'FlowReactors must be used alone');
+                self.verifySubstring(ME.message,  'Cannot mix');
             end
         end
 
