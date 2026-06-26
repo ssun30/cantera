@@ -136,11 +136,11 @@ classdef ReactorNet < handle
         end
 
         function set.atol(obj, aerr)
-            ct.impl.call('mReactornet_setAbsoluteTolerance', obj.id, aerr);
+            ct.impl.call('mReactornet_setTolerances', obj.id, obj.rtol, aerr);
         end
 
         function set.rtol(obj, rerr)
-            ct.impl.call('mReactornet_setRelativeTolerance', obj.id, rerr);
+            ct.impl.call('mReactornet_setTolerances', obj.id, rerr, obj.atol);
         end
 
         %% ReactorNet get methods
