@@ -331,6 +331,7 @@ jobs:
       env:
         CANTERA_ROOT: ${{ github.workspace }}
         CANTERA_DATA: ${{ github.workspace }}/data
+        CANTERA_LIB_PATH: ${{ github.workspace }}/build/lib
       with:
         command: |
           ctDir = getenv('CANTERA_ROOT');
@@ -1283,6 +1284,7 @@ jobs:
     env:
       CANTERA_ROOT: ${{ github.workspace }}
       CANTERA_DATA: ${{ github.workspace }}/data
+      CANTERA_LIB_PATH: ${{ github.workspace }}/build/lib
     runs-on: ${{ matrix.os }}
     needs: [ubuntu-multiple-pythons, macos-multiple-pythons, windows-2022, windows]
     timeout-minutes: 60
