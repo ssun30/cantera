@@ -6,13 +6,7 @@ function load(mode)
     %   ct.load('inprocess')   % load in-process
     %   ct.load('outofprocess')% load out-of-process
     %
-    % On load, the directory containing the Cantera shared library (and its
-    % dependency libraries) is placed on the OS dynamic-loader search path, and
-    % the Cantera data directory is registered, so that MATLAB does not need to
-    % be launched from an activated conda environment. The library directory is
-    % resolved from (in order): a persisted preference, the CANTERA_LIB_PATH
-    % environment variable, or an interactive folder picker on the first run.
-    % Configure it non-interactively with :func:`ct.configureCanteraDirectories`.
+    % After installing the toolbox, run :func:`ct.install` once before loading.
 
     arguments
         mode (1,1) string {mustBeMember(mode, ...
@@ -35,24 +29,28 @@ function load(mode)
         end
     end
 
-    % Resolve where the Cantera shared library and its dependencies live so the
-    % OS dynamic loader can find them. "" means "unknown": load proceeds without
-    % injecting a path (e.g. MATLAB launched from an activated conda env).
-    libDir = resolveLibDir();
+    libDir = toolboxPaths();
+    if ~hasInterface(libDir)
+        error("ct:load:NotInstalled", ...
+              ("The Cantera MATLAB interface was not found in %s.\n" + ...
+               "Run ct.install to set it up."), libDir);
+    end
+    if ~any(strcmp(strsplit(path, pathsep), libDir))
+        addpath(libDir);
+    end
 
-    % Out-of-process mode on R2025a+ can pass environment variables to the child
-    % library process; otherwise we must fall back to setenv in this process.
+    % The interface folder also holds the Cantera shared library, which the OS
+    % loader must find. Out-of-process mode on R2025a+ can pass environment
+    % variables to the child library process; otherwise set them here.
     useOOPEnv = ~isMATLABReleaseOlderThan("R2025a") && mode == "outofprocess";
-
     pathVar = buildLoaderPathVar(libDir);
-
     if ~useOOPEnv
         applyLoaderEnvInProcess(pathVar);
     end
 
     global ctMatlab
     if ~ct.isLoaded
-        if useOOPEnv && numEntries(pathVar) > 0
+        if useOOPEnv
             ctMatlab = clibConfiguration("ctMatlab", ExecutionMode=mode, ...
                                    OutOfProcessEnvironmentVariables=pathVar);
         else
@@ -61,141 +59,35 @@ function load(mode)
     end
 
     ctVersion = ct.version;
-
-    if libDir ~= ""
-        registerDataDir(libDir);
-    end
+    addInstalledDataDirectory();
 
     fprintf('Cantera %s is ready for use (%s mode).\n', ctVersion, mode);
 end
 
-function libDir = resolveLibDir()
-    % Resolve the Cantera library directory. Returns "" if none.
-    GROUP = "Cantera";
-    LIB_KEY = "LibraryDirectory";
-
-    % 1. Persisted preference.
-    if ispref(GROUP, LIB_KEY)
-        libDir = string(getpref(GROUP, LIB_KEY));
-        if isValidLibDir(libDir)
-            return
-        end
-        warning("ct:load:StalePref", ...
-                ("Stored Cantera library directory is no longer valid: %s\n" + ...
-                 "Update it with ct.configureCanteraDirectories(<dir>)."), libDir);
-    end
-
-    % 2. Environment variable (used, not persisted; keeps CI stateless).
-    envLib = string(getenv("CANTERA_LIB_PATH"));
-    if envLib ~= "" && isValidLibDir(envLib)
-        libDir = envLib;
-        return
-    end
-
-    % 3. Interactive folder picker, only when a desktop UI is available.
-    if canPrompt()
-        libDir = promptForLibDir(GROUP, LIB_KEY);
-        return
-    end
-
-    % 4. Nothing available: proceed without injecting a loader path.
-    warning("ct:load:NoLibDir", ...
-            ("Cantera library directory is not configured. If loading fails, " + ...
-             "set it with ct.configureCanteraDirectories(<dir>) or the " + ...
-             "CANTERA_LIB_PATH environment variable."));
-    libDir = "";
-end
-
-function libDir = promptForLibDir(GROUP, LIB_KEY)
-    % Prompt the user for the Cantera library directory and persist it.
-    libDir = "";
-
-    msg = "Select the directory that contains the Cantera shared library " + ...
-          "(cantera_shared.dll on Windows, libcantera_shared.* on " + ...
-          "Linux/macOS) and its dependency libraries. For a conda " + ...
-          "installation this is typically the environment's Library\bin " + ...
-          "(Windows) or lib (Linux/macOS) folder.";
-    uiwait(msgbox(char(msg), "Configure Cantera", "modal"));
-
-    sel = uigetdir(pwd, "Select Cantera library directory");
-    if isequal(sel, 0)
-        warning("ct:load:NoLibDir", ...
-                "No directory selected; proceeding without setting the loader path.");
-        return
-    end
-
-    sel = string(sel);
-    if ~isValidLibDir(sel)
-        warning("ct:load:BadSelection", ...
-                "Selected directory does not contain a Cantera shared library: %s", sel);
-        return
-    end
-
-    setpref(GROUP, LIB_KEY, char(sel));
-    inferred = inferDataDir(sel);
-    if inferred ~= ""
-        setpref(GROUP, "DataDirectory", cellstr(inferred));
-    end
-    libDir = sel;
-end
-
-function tf = isValidLibDir(d)
-    % True if d is a folder containing a Cantera shared library.
-    tf = false;
-    if d == "" || ~isfolder(d)
-        return
-    end
-    try
-        ctLib(d);  % errors if no shared library is present
-        tf = true;
-    catch
-        tf = false;
-    end
-end
-
-function tf = canPrompt()
-    % True only when an interactive desktop is available (so uigetdir will not
-    % block headless or -batch sessions such as CI).
-    tf = usejava('desktop') && ~batchStartupOptionUsed;
-end
-
 function pathVar = buildLoaderPathVar(libDir)
-    % Build the OS-specific dynamic-loader environment dictionary, merging the
-    % Cantera library directory (and, on macOS, MATLAB's own libraries) with the
+    % Build the OS-specific dynamic-loader environment dictionary, prepending
+    % the library directory (and, on macOS, MATLAB's own libraries) to the
     % current value of the relevant environment variable.
     pathVar = dictionary(string.empty, string.empty);
 
     if ispc
         varName = "PATH";
-        existing = string(getenv("PATH"));
         extra = strings(0, 1);
     elseif ismac
         varName = "DYLD_LIBRARY_PATH";
         arch = computer("arch");
-        existing = string(getenv("DYLD_LIBRARY_PATH"));
-        % MATLAB's own runtime libraries (previously the only entry set here).
         extra = [matlabroot + "/bin/" + arch; matlabroot + "/sys/os/" + arch];
     else
         varName = "LD_LIBRARY_PATH";
-        existing = string(getenv("LD_LIBRARY_PATH"));
         extra = strings(0, 1);
     end
 
-    parts = strings(0, 1);
-    if libDir ~= ""
-        parts = [parts; libDir];
-    end
-    parts = [parts; extra];
+    parts = [libDir; extra];
+    existing = string(getenv(varName));
     if existing ~= ""
         parts = [parts; split(existing, pathsep)];
     end
-
-    parts = parts(parts ~= "");
-    parts = unique(parts, "stable");
-
-    if isempty(parts)
-        return
-    end
+    parts = unique(parts(parts ~= ""), "stable");
 
     pathVar(varName) = strjoin(parts, pathsep);
 end
@@ -204,10 +96,6 @@ function applyLoaderEnvInProcess(pathVar)
     % Apply the loader environment via setenv. Used when
     % OutOfProcessEnvironmentVariables is unavailable (in-process mode, or
     % MATLAB older than R2025a).
-    if numEntries(pathVar) == 0
-        return
-    end
-
     k = keys(pathVar);
     for i = 1:numel(k)
         setenv(char(k(i)), char(pathVar(k(i))));
@@ -222,30 +110,26 @@ function applyLoaderEnvInProcess(pathVar)
     end
 end
 
-function registerDataDir(libDir)
-    % Register the Cantera data directory (best-effort; never throws).
+function addInstalledDataDirectory()
+    % Data directories live in the loaded library, so the one registered by
+    % ct.install has to be re-added on every load.
     GROUP = "Cantera";
-    DATA_KEY = "DataDirectory";
-    try
-        if ispref(GROUP, DATA_KEY)
-            dataDir = string(getpref(GROUP, DATA_KEY));
-        else
-            dataDir = inferDataDir(libDir);
-        end
+    if ~ispref(GROUP, "DataDirectory")
+        return
+    end
 
-        dataDir = reshape(dataDir, 1, []);
-        dataDir = dataDir(arrayfun(@isfolder, dataDir));
+    dataDir = string(getpref(GROUP, "DataDirectory"));
+    dataDir = reshape(dataDir, 1, []);
+    missing = dataDir(~arrayfun(@isfolder, dataDir));
+    if ~isempty(missing)
+        warning("ct:load:MissingDataDir", ...
+                ("Cantera data directory no longer exists: %s\n" + ...
+                 "Run ct.install(Force=true) to reconfigure."), ...
+                strjoin(missing, ", "));
+    end
 
-        if isempty(dataDir)
-            warning("ct:load:NoDataDir", ...
-                    ("Could not determine a Cantera data directory. Add one " + ...
-                     "with ct.addDataDirectories if data files are not found."));
-            return
-        end
-
+    dataDir = dataDir(arrayfun(@isfolder, dataDir));
+    if ~isempty(dataDir)
         ct.addDataDirectories(dataDir);
-    catch ME
-        warning("ct:load:DataDirFailed", ...
-                "Failed to register Cantera data directory (%s).", ME.message);
     end
 end
