@@ -137,7 +137,7 @@ classdef (Abstract) Kinetics < handle
         function rxn = reactionEquation(obj, irxn)
             % Reaction equation of a reaction. ::
             %
-            %   >> rxn = kin.reactionEquation(irxn)
+            %     >> rxn = kin.reactionEquation(irxn)
             %
             % :param irxn:
             %    Integer index of the reaction.
@@ -166,7 +166,7 @@ classdef (Abstract) Kinetics < handle
             %    Returns a sparse matrix of all reactant stoichiometric
             %    coefficients if there are more than 1 species or reactions,
             %    otherwise returns an integer.
-            %    The matrix elements ``nu(k, i)`` is the stoichiometric
+            %    Each matrix element ``nu(k, i)`` is the stoichiometric
             %    coefficient of species k as a reactant in reaction i.
             %    If ``species`` and ``rxns`` are specified, the matrix
             %    will contain only entries for the specified species
@@ -237,7 +237,7 @@ classdef (Abstract) Kinetics < handle
             %    Returns a sparse matrix of all product stoichiometric
             %    coefficients if there are more than 1 species or reactions,
             %    otherwise returns an integer.
-            %    The matrix elements ``nu(k, i)`` is the stoichiometric
+            %    Each matrix element ``nu(k, i)`` is the stoichiometric
             %    coefficient of species k as a product in reaction i.
             %    If ``species`` and ``rxns`` are specified, the matrix
             %    will contain only entries for the specified species
@@ -307,8 +307,8 @@ classdef (Abstract) Kinetics < handle
             %    Returns a sparse matrix of all net stoichiometric
             %    coefficients if there are more than 1 species or reactions,
             %    otherwise returns an integer.
-            %    The matrix elements ``nu(k, i)`` is the stoichiometric
-            %    coefficient of species k as a product in reaction i.
+            %    Each matrix element ``nu(k, i)`` is the net stoichiometric
+            %    coefficient of species k in reaction i.
             %    If ``species`` and ``rxns`` are specified, the matrix
             %    will contain only entries for the specified species
             %    and reactions. For example, ``kin.netStoichCoeffs(3,
@@ -344,7 +344,7 @@ classdef (Abstract) Kinetics < handle
             % :param i:
             %    Integer reaction number.
             % :return:
-            %    True if reaction number i is reversible. false if irreversible.
+            %    True if reaction number i is reversible, false if irreversible.
 
             n = ct.impl.call('mKin_isReversible', obj.kinID, i - 1) == 1;
         end

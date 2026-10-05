@@ -1,22 +1,18 @@
 classdef ReactorSurface < ct.zeroD.ReactorBase
     % ReactorSurface Class ::
     %
-    %     >> s = ct.zeroD.ReactorSurface(surf, reactor, name, clone)
+    %     >> s = ct.zeroD.ReactorSurface(surf, reactors, name, clone)
     %
-    % A surface on which heterogeneous reactions take place. The
-    % mechanism object (typically an instance of :mat:class:`ct.Interface`)
-    % must be constructed so that it is properly linked to the
-    % object representing the fluid in the reactor. The surface
-    % temperature on each side is taken to be equal to the
-    % temperature of the reactor.
+    % A reacting surface in contact with the contents of one or more reactors.
+    % For the purpose of rate evaluation, the temperature of the surface is set
+    % equal to the temperature of the first reactor specified.
     %
     % :param surf:
-    %    Surface reaction mechanisms for the left-facing surface.
-    %    This must bean instance of class :mat:class:`ct.Kinetics`, or of a class
-    %    derived from Kinetics, such as :mat:class:`ct.Interface`.
+    %    Instance of class :mat:class:`ct.Interface` representing reactions on
+    %    this surface.
     % :param reactors:
     %    An instance of or a cell array of instances of class
-    %    :mat:class:`ct.zeroD.ReactorBase`.
+    %    :mat:class:`ct.zeroD.ReactorBase` that this surface is adjacent to.
     % :param name:
     %    Reactor surface name (optional; default is ``(none)``).
     % :param clone:

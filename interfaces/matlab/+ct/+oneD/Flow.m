@@ -20,7 +20,7 @@ classdef (Abstract) Flow < ct.oneD.Domain
         energyEnabled logical
 
         % Boolean flag indicating whether the diffusive mass fluxes due to the Soret
-        % effect is enabled.
+        % effect are enabled.
         soretEnabled logical
 
         % Transport model used for calculating transport properties.
@@ -126,7 +126,7 @@ classdef (Abstract) Flow < ct.oneD.Domain
             % This method can be called at any time, but is usually used to set the
             % initial guess for the solution.
             %
-            % Example (assuming 'd' is an instance of class :mat:class:`ct.oneD.Domain`):
+            % Example (assuming 'd' is an instance of class :mat:class:`ct.oneD.Flow`):
             %    >> zr = [0.0, 0.1, 0.2, 0.4, 0.8, 1.0];
             %
             %    >> v = [500, 650, 700, 730, 800, 900];
@@ -191,10 +191,10 @@ classdef (Abstract) Flow < ct.oneD.Domain
             % :param curve:
             %    Maximum relative difference in slope between adjacent cells.
             % :param prune:
-            %    Minimum value for slope or curve for which points will be
-            %    retained or curve value is below prune for all components,
-            %    it will be deleted, unless either neighboring point is
-            %    already marked for deletion.
+            %    If the slope or curve criteria are satisfied to the level of
+            %    `prune`, the grid point is assumed not to be needed and is removed.
+            %    Set `prune` significantly smaller than `slope` and `curve`. Set
+            %    to zero to disable pruning the grid.
             arguments
                 obj
                 ratio (1,1) double {mustBePositive} = 10.0

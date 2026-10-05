@@ -1,7 +1,7 @@
 function buildInterface(ctToolboxDir, ctIncludeDir, ctLibDir, cleanup)
     % Build the Cantera MATLAB interface. ::
     %
-    %   >> buildInterface(ctToolboxDir, includeDir, ctLibDir)
+    %     >> ct.buildInterface(ctToolboxDir, ctIncludeDir, ctLibDir, cleanup)
     %
     % Generate and compile the MATLAB interface for Cantera from the provided header
     % files and a compiled Cantera library.
@@ -34,7 +34,7 @@ function buildInterface(ctToolboxDir, ctIncludeDir, ctLibDir, cleanup)
 
     if ~isfolder(ctIncludeDir + "/cantera_clib")
         error('buildInterface:invalidInclude', ...
-            'Invalid include folder. "%s" must have "cantera_lib" subfolder ', ...
+            'Invalid include folder. "%s" must have a "cantera_clib" subfolder.', ...
             ctIncludeDir);
     end
 

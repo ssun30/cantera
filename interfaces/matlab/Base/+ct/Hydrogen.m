@@ -9,7 +9,7 @@ function h = Hydrogen()
     % equation of state is taken from
     %
     % Reynolds, W. C. *Thermodynamic Properties in SI: graphs, tables, and
-    % computational equations for forty substances* Stanford: Stanford
+    % computational equations for forty substances.* Stanford: Stanford
     % University, 1979. Print.
     %
     % For more details, see classes :ct:`PureFluidPhase` and :ct:`hydrogen` in the

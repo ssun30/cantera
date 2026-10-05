@@ -15,7 +15,7 @@ classdef (Abstract) Boundary < ct.oneD.Domain
     % :param phase:
     %     Instance of class :mat:class:`ct.Solution` or :mat:class:`ct.Interface`.
     % :param name:
-    %     String, ID of the flow.
+    %     String, ID of the boundary.
 
     properties
         massFlux % The mass flux [kg/s/m²] in the domain.

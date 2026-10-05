@@ -94,8 +94,8 @@ classdef CounterFlowDiffusionFlame < ct.oneD.Sim1D
             %    elMoles = elementalMassFraction/element atomic weight.
             %
             % From this, the stoichiometric Air/Fuel ratio can be determined.
-            % 1 Mole of O needs 2 Moles of C and 0.5 Moles of H for stoichiometric
-            % conditions. The stoichiometric mixture fraction, Zst, is then
+            % Each mole of C needs 2 moles of O, and each mole of H needs 0.5 moles
+            % of O for stoichiometric conditions. The stoichiometric mixture fraction, Zst, is then
             % calculated.
 
             phi = sFuel / sOx;

@@ -3,10 +3,10 @@ function d = dataDirectories()
     %
     %     >> ct.dataDirectories()
     %
-    % Get a cell array of the directories Cantera searches for data files
+    % Get a cell array of the directories Cantera searches for data files.
     %
     % :return:
-    %     Cell array with strings representing the data file search directories
+    %     Cell array with strings representing the data file search directories.
 
     ct.isLoaded(true);
     d = strsplit(ct.impl.getString('mCt_getDataDirectories', pathsep), pathsep);

@@ -30,7 +30,7 @@ classdef Solution < handle & ct.ThermoPhase & ct.Kinetics & ct.Transport
     % :param src:
     %     Input string of YAML file name.
     % :param name:
-    %     name of the phase to import as specified in the YAML file.
+    %     Name of the phase to import as specified in the YAML file.
     % :param transport_model:
     %     String specifying transport model. Possible values are ``'default'``,
     %     ``'none'``, ``'mixture-averaged'``, ``'mixture-averaged-CK'``,

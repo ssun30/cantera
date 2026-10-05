@@ -23,9 +23,9 @@ classdef (Abstract) FlowDevice < ct.zeroD.Connector
     % :param upstream:
     %     Upstream reactor or reservoir.
     % :param downstream:
-    %     Downstream Reactor or reservoir.
+    %     Downstream reactor or reservoir.
     % :param name:
-    %     Reactor name (optional; default is ``(none)``).
+    %     Flow device name (optional; default is ``(none)``).
 
     properties (SetAccess = immutable)
 

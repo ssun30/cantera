@@ -68,10 +68,10 @@ classdef Sim1D < handle
             %
             % This method can be used to provide an initial guess for the solution.
             %
-            % See also: :mat:class:`save`
+            % See also: :mat:meth:`ct.oneD.Sim1D.save`
             %
             % :param fname:
-            %     File name of an YAML or HDF file containing solution information.
+            %     File name of a YAML or HDF5 file containing solution information.
             % :param id:
             %     ID of the element that should be restored.
 
@@ -81,12 +81,13 @@ classdef Sim1D < handle
         function save(obj, fname, id, desc, overwrite)
             % Save a solution to a file. ::
             %
-            %     >> s.save(fname, id, desc)
+            %     >> s.save(fname, id, desc, overwrite)
             %
-            % The output file is in a format that can be used by :mat:class:`restore`
+            % The output file is in a format that can be used by
+            % :mat:meth:`ct.oneD.Sim1D.restore`.
             %
             % :param fname:
-            %     File name where YAML or HDL file should be written.
+            %     File name where YAML or HDF5 file should be written.
             % :param id:
             %     ID to be assigned to the file element when it is written.
             % :param desc:
@@ -113,7 +114,8 @@ classdef Sim1D < handle
             %    Integer flag controlling the amount of diagnostic output.
             %    Zero suppresses all output, and 5 produces very verbose output.
             % :param refineGrid:
-            %    Integer, 1 to allow grid refinement, 0 to disallow.
+            %    Logical, true (or 1) to allow grid refinement, false (or 0) to
+            %    disallow.
 
             ct.impl.call('mSim1D_solve', obj.stID, loglevel, refineGrid);
         end
@@ -143,10 +145,9 @@ classdef Sim1D < handle
             %     >> n = s.domainIndex(name)
             %
             % :param name:
-            %    If double, the value is :returned. Otherwise, the name is
-            %    looked up and its index is :returned.
+            %    String name of the domain to look up.
             % :return:
-            %    Index of domain.
+            %    Integer, 1-based index of the domain.
 
             n = ct.impl.call('mSim1D_domainIndex', obj.stID, name);
 
@@ -182,7 +183,7 @@ classdef Sim1D < handle
             %     >> s.setGridMin(domain, gridmin)
             %
             % :param domain:
-            %    Integer ID of the domain.
+            %    Integer, 1-based index of the domain.
             % :param gridmin:
             %    Minimum grid spacing [m].
 
@@ -218,9 +219,9 @@ classdef Sim1D < handle
             % :param steps:
             %    Vector of number of steps to take before re-attempting solution
             %    of steady-state problem.
-            %    For example, steps = [1, 2, 5, 10] would cause one timestep to be
-            %    taken first time the steady-state solution attempted.
-            %    If this failed, two time steps would be taken.
+            %    For example, steps = [1, 2, 5, 10] would cause one time step to be
+            %    taken the first time the steady-state solution is attempted.
+            %    If this fails, two time steps would be taken.
 
             ct.impl.call('mSim1D_setTimeStep', obj.stID, stepsize, steps);
         end

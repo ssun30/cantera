@@ -1,14 +1,14 @@
 classdef Interface < ct.Solution
     % Interface Class ::
     %
-    %     >> s = ct.Interface(src, name, p1, p2)
+    %     >> s = ct.Interface(src, name, adj1, adj2, ...)
     %
     % See :ref:`sec-yaml-ideal-surface` and :ref:`sec-yaml-guide-adjacent`.
     %
     % :param src: YAML file containing the interface or edge phase.
     % :param name: Name of the interface or edge phase in the YAML file.
     % :param varargin:
-    %     Optional list of phases pi adjacent to the interface; if omitted, adjacent
+    %     Optional list of phases adjacent to the interface; if omitted, adjacent
     %     phases are added automatically.
 
     properties (SetAccess = public)
@@ -91,7 +91,7 @@ classdef Interface < ct.Solution
             % This should be used only when calculating partial derivatives
             % with respect to cov[k] by finite difference.
             %
-            % s.setUnnormalizedCoverages(cov)
+            %     >> s.setUnnormalizedCoverages(cov)
             %
             % :param cov:
             %      Vector coverage of the species.

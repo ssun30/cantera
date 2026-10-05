@@ -29,10 +29,10 @@ classdef Wall < ct.zeroD.Connector
     % time. The heat flux is positive when heat flows from the
     % reactor on the left to the reactor on the right.
     %
-    % Note: the Wall class constructor only assign default values
-    % to various properties. The user could specify those properties
-    % after initial construction by using the various methods of
-    % the Wall class.
+    % Note: the Wall class constructor only assigns default values
+    % to various properties. The user can specify those properties
+    % after initial construction by setting the properties of
+    % the Wall object.
     %
     % :param l:
     %    Instance of class :mat:class:`ct.zeroD.ReactorBase` to be used as the bulk phase
@@ -63,17 +63,15 @@ classdef Wall < ct.zeroD.Connector
         % Heat flux [W/m²].
         %
         % Must be set by an instance of :mat:class:`ct.Func1`, which allows the
-        % heat flux to be an arbitrary function of time. It is possible
-        % to specify a constant heat flux by using the polynomial
-        % functor with only the first term specified.
+        % heat flux to be an arbitrary function of time. A constant heat flux
+        % can be specified using a ``'constant'`` functor.
         heatFlux
 
         % Velocity [m/s].
         %
         % Must be set by an instance of :mat:class:`ct.Func1`, which allows the
-        % velocity to be an arbitrary function of time. It is possible
-        % to specify a constant velocity by using the polynomial
-        % functor with only the first term specified.
+        % velocity to be an arbitrary function of time. A constant velocity
+        % can be specified using a ``'constant'`` functor.
         velocity
     end
 
